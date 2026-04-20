@@ -255,7 +255,8 @@ def updateprofile(request):
                 messages.error(request, 'Password not matched')
                 return redirect('account_info')
             if not curpassword:
-                messages.error(request, 'Current password is required to change password')
+                messages.error(
+                    request, 'Current password is required to change password')
                 return redirect('account_info')
             if not user_obj.check_password(curpassword):
                 messages.error(request, 'Current password is incorrect')
@@ -671,14 +672,43 @@ def dashboard(request):
     cancel_count = OrderPlaced.objects.filter(
         status='Cancel', is_paid=True).count()
 
+    # Calculate monthly income from delivered and paid orders
+    try:
+        from django.db.models import Sum
+        from datetime import datetime, timedelta
+
+        # Get current month's delivered orders
+        current_month_start = datetime.now().replace(day=1)
+        monthly_revenue_data = OrderPlaced.objects.filter(
+            status='Delivered',
+            is_paid=True,
+            ordered_date__gte=current_month_start
+        ).aggregate(total=Sum('paid_amount'))
+
+        monthly_income = 0
+        if monthly_revenue_data['total']:
+            try:
+                monthly_income = float(monthly_revenue_data['total'])
+            except (ValueError, TypeError):
+                monthly_income = 0
+
+        monthly_income = monthly_income if monthly_income > 0 else 0
+    except Exception as e:
+        print(f"Error calculating monthly income: {e}")
+        monthly_income = 0
+
     sub_category = SubCategory.objects.all()
     brands = Brands.objects.all()
     products = Product.objects.all()
     subscribe = Subscribe.objects.all()
+    categories = Category.objects.all()
+    contact_message = Contact.objects.all()
+
     context = {
         'pending_count': pending_count, 'packed_count': packed_count,
         'onway_count': onway_count, 'delivered_count': delivered_count, 'cancel_count': cancel_count,
-        'sub_category': sub_category, 'brands': brands, 'products': products, "subscribe": subscribe
+        'sub_category': sub_category, 'brands': brands, 'products': products, "subscribe": subscribe,
+        'categories': categories, 'contact_message': contact_message, 'monthly_income': monthly_income
     }
     return render(request, 'adminpannel/index.html', context)
 
@@ -689,10 +719,29 @@ def addcategory(request):
     if user_obj.is_staff != True:
         return redirect('adminlogin')
     if request.method == "POST":
-        title = request.POST['title']
-        image = request.FILES['images']
-        category = Category(category_name=title, category_image=image)
-        category.save()
+        try:
+            title = request.POST.get('title', '').strip()
+            image = request.FILES.get('images')
+
+            # Validation
+            if not title:
+                messages.error(request, 'Category title is required')
+                category = Category.objects.all()
+                context = {'category': category}
+                return render(request, 'adminpannel/pages/addcategory.html', context)
+
+            if not image:
+                messages.error(request, 'Category image is required')
+                category = Category.objects.all()
+                context = {'category': category}
+                return render(request, 'adminpannel/pages/addcategory.html', context)
+
+            category = Category(category_name=title, category_image=image)
+            category.save()
+            messages.success(request, 'Category added successfully')
+        except Exception as e:
+            messages.error(request, f'Error adding category: {str(e)}')
+
     category = Category.objects.all()
     context = {'category': category}
     return render(request, 'adminpannel/pages/addcategory.html', context)
@@ -714,18 +763,51 @@ def addsubcategory(request):
     if user_obj.is_staff != True:
         return redirect('adminlogin')
     if request.method == "POST":
-        title = request.POST['title']
-        subcat = request.POST['subcategory']
-        image = request.FILES['image']
-        subcategory = SubCategory(
-            category_name=title,
-            category=Category.objects.get(uid=subcat),
-            category_image=image
-        )
-        subcategory.save()
+        try:
+            title = request.POST.get('title', '').strip()
+            subcat = request.POST.get('subcategory', '').strip()
+            image = request.FILES.get('image')
+
+            # Validation
+            if not title:
+                messages.error(request, 'Subcategory title is required')
+                sub_category = SubCategory.objects.all()
+                categories = Category.objects.all()
+                context = {'sub_category': sub_category,
+                           'categories': categories}
+                return render(request, 'adminpannel/pages/addsubcategory.html', context)
+
+            if not subcat:
+                messages.error(request, 'Please select a category')
+                sub_category = SubCategory.objects.all()
+                categories = Category.objects.all()
+                context = {'sub_category': sub_category,
+                           'categories': categories}
+                return render(request, 'adminpannel/pages/addsubcategory.html', context)
+
+            if not image:
+                messages.error(request, 'Subcategory image is required')
+                sub_category = SubCategory.objects.all()
+                categories = Category.objects.all()
+                context = {'sub_category': sub_category,
+                           'categories': categories}
+                return render(request, 'adminpannel/pages/addsubcategory.html', context)
+
+            subcategory = SubCategory(
+                category_name=title,
+                category=Category.objects.get(uid=subcat),
+                category_image=image
+            )
+            subcategory.save()
+            messages.success(request, 'Subcategory added successfully')
+        except Category.DoesNotExist:
+            messages.error(request, 'Selected category does not exist')
+        except Exception as e:
+            messages.error(request, f'Error adding subcategory: {str(e)}')
 
     sub_category = SubCategory.objects.all()
-    context = {'sub_category': sub_category}
+    categories = Category.objects.all()
+    context = {'sub_category': sub_category, 'categories': categories}
     return render(request, 'adminpannel/pages/addsubcategory.html', context)
 
 
@@ -745,13 +827,32 @@ def addbrands(request):
     if user_obj.is_staff != True:
         return redirect('adminlogin')
     if request.method == "POST":
-        title = request.POST['title']
-        image = request.FILES['image']
-        brands = Brands(
-            brands_name=title,
-            brands_image=image
-        )
-        brands.save()
+        try:
+            title = request.POST.get('title', '').strip()
+            image = request.FILES.get('image')
+
+            # Validation
+            if not title:
+                messages.error(request, 'Brand name is required')
+                brands = Brands.objects.all()
+                context = {'brands': brands}
+                return render(request, 'adminpannel/pages/addbrands.html', context)
+
+            if not image:
+                messages.error(request, 'Brand image is required')
+                brands = Brands.objects.all()
+                context = {'brands': brands}
+                return render(request, 'adminpannel/pages/addbrands.html', context)
+
+            brands = Brands(
+                brands_name=title,
+                brands_image=image
+            )
+            brands.save()
+            messages.success(request, 'Brand added successfully')
+        except Exception as e:
+            messages.error(request, f'Error adding brand: {str(e)}')
+
     brands = Brands.objects.all()
     context = {'brands': brands}
     return render(request, 'adminpannel/pages/addbrands.html', context)
@@ -773,32 +874,66 @@ def addproduct(request):
     if user_obj.is_staff != True:
         return redirect('adminlogin')
     if request.method == 'POST':
-        title = request.POST['title']
-        # category = request.POST['category']
-        subcategory = request.POST['subcategory']
-        brands = request.POST['brands']
-        mrp_price = request.POST['mrp_price']
-        dis_price = request.POST['dis_price']
-        desc = request.POST['desc']
-        length = request.POST['length']
-        breadth = request.POST['breadth']
-        height = request.POST['height']
-        weight = request.POST['weight']
-        product = Product(
-            product_name=title,
-            sub_category=SubCategory.objects.get(uid=subcategory),
-            brands=Brands.objects.get(uid=brands),
-            mrp_price=mrp_price,
-            dis_price=dis_price,
-            product_description=desc,
-            length=length,
-            breadth=breadth,
-            height=height,
-            weight=weight,
-            is_publish=True
-        )
-        product.save()
-        return redirect('editproduct', product.uid)
+        try:
+            title = request.POST.get('title', '').strip()
+            subcategory = request.POST.get('subcategory', '').strip()
+            brands = request.POST.get('brands', '').strip()
+            mrp_price = request.POST.get('mrp_price', '').strip()
+            dis_price = request.POST.get('dis_price', '').strip()
+            desc = request.POST.get('desc', '').strip()
+            length = request.POST.get('length', '').strip()
+            breadth = request.POST.get('breadth', '').strip()
+            height = request.POST.get('height', '').strip()
+            weight = request.POST.get('weight', '').strip()
+
+            # Validation
+            if not title:
+                messages.error(request, 'Product title is required')
+            elif not subcategory:
+                messages.error(request, 'Please select a subcategory')
+            elif not brands:
+                messages.error(request, 'Please select a brand')
+            elif not mrp_price or float(mrp_price) <= 0:
+                messages.error(request, 'Please enter valid MRP price')
+            elif not dis_price or float(dis_price) <= 0:
+                messages.error(request, 'Please enter valid discounted price')
+            elif not length or float(length) <= 0:
+                messages.error(request, 'Please enter valid length')
+            elif not breadth or float(breadth) <= 0:
+                messages.error(request, 'Please enter valid breadth')
+            elif not height or float(height) <= 0:
+                messages.error(request, 'Please enter valid height')
+            elif not weight or float(weight) <= 0:
+                messages.error(request, 'Please enter valid weight')
+            elif not desc:
+                messages.error(request, 'Product description is required')
+            else:
+                product = Product(
+                    product_name=title,
+                    sub_category=SubCategory.objects.get(uid=subcategory),
+                    brands=Brands.objects.get(uid=brands),
+                    mrp_price=mrp_price,
+                    dis_price=dis_price,
+                    product_description=desc,
+                    length=length,
+                    breadth=breadth,
+                    height=height,
+                    weight=weight,
+                    is_publish=True
+                )
+                product.save()
+                messages.success(request, 'Product added successfully')
+                return redirect('editproduct', product.uid)
+        except SubCategory.DoesNotExist:
+            messages.error(request, 'Selected subcategory does not exist')
+        except Brands.DoesNotExist:
+            messages.error(request, 'Selected brand does not exist')
+        except ValueError as e:
+            messages.error(
+                request, 'Please enter valid numeric values for price and dimensions')
+        except Exception as e:
+            messages.error(request, f'Error adding product: {str(e)}')
+
     sub_category = SubCategory.objects.all()
     brands = Brands.objects.all()
     context = {'sub_category': sub_category, "brands": brands}

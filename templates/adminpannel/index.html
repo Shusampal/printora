@@ -201,7 +201,11 @@
             <div class="card-body">
               <h4 class="card-title">Monthly Income</h4>
               <div class="f-s-30 f-w-300 text-success">
-                $3500 <span class="f-s-16 text-uppercase">USD</span>
+                {% if monthly_income > 0 %} ₹{{ monthly_income|floatformat:0 }}
+                <span class="f-s-16 text-uppercase">INR</span>
+                {% else %}
+                <span class="text-muted">No data available</span>
+                {% endif %}
               </div>
               <a
                 href="#"

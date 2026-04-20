@@ -1,44 +1,79 @@
 {% load static %}
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-
-<head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width,initial-scale=1">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
     <title>{{company_name}}|Admin Pannel</title>
     <!-- Favicon icon -->
-    <link rel="icon" type="image/png" sizes="16x16" href="{{company_logo}}">
-    <link href="/static/csss/style.css" rel="stylesheet">
+    <link rel="icon" type="image/png" sizes="16x16" href="{{company_logo}}" />
+    <link href="/static/csss/style.css" rel="stylesheet" />
     <script src="/static/jss/modernizr-3.6.0.min.js"></script>
     <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}" />
+    <!-- Toastr CSS -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css"
+    />
     <script src="https://cdn.ckeditor.com/ckeditor5/11.0.1/classic/ckeditor.js"></script>
-</head>
+  </head>
 
-<body class="v-light vertical-nav fix-header fix-sidebar">
-    {% block body %}
-
-    {% endblock body %}
+  <body class="v-light vertical-nav fix-header fix-sidebar">
+    {% block body %} {% endblock body %}
 
     <script>
-        ClassicEditor
-            .create( document.querySelector( '#editor' ) )
-            .catch( error => {
-                console.error( error );
-            } );
+      ClassicEditor.create(document.querySelector("#editor")).catch((error) => {
+        console.error(error);
+      });
     </script>
     <!-- Common JS -->
     <script src="/static/assetss/plugins/common/common.min.js"></script>
-    
+
     <script src="/static/jss/custom.min.js"></script>
 
     <script src="/static/assetss/plugins/chartjs/Chart.bundle.js"></script>
- 
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- Toastr JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+    <!-- Toastr Configuration -->
+    <script>
+      toastr.options = {
+        closeButton: true,
+        debug: false,
+        newestOnTop: false,
+        progressBar: true,
+        positionClass: "toast-top-right",
+        preventDuplicates: true,
+        onclick: null,
+        showDuration: "300",
+        hideDuration: "1000",
+        timeOut: "5000",
+        extendedTimeOut: "1000",
+        showEasing: "swing",
+        hideEasing: "linear",
+        showMethod: "fadeIn",
+        hideMethod: "fadeOut",
+      };
+
+      // Convert Django messages to toastr notifications
+      document.addEventListener('DOMContentLoaded', function() {
+        {% for message in messages %}
+          {% if message.tags == 'error' %}
+            toastr.error("{{ message|safe }}");
+          {% elif message.tags == 'success' %}
+            toastr.success("{{ message|safe }}");
+          {% elif message.tags == 'warning' %}
+            toastr.warning("{{ message|safe }}");
+          {% elif message.tags == 'info' %}
+            toastr.info("{{ message|safe }}");
+          {% else %}
+            toastr.info("{{ message|safe }}");
+          {% endif %}
+        {% endfor %}
+      });
+    </script>
     <script src="/static/jss/dashboard-1.js"></script>
-</body>
-
+  </body>
 </html>
-
-
-
-
