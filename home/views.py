@@ -1,12 +1,12 @@
-from django.shortcuts import render,redirect, get_object_or_404
+from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse
-from product.models import Product,BestSaler,HotSaler,DealOfTheDay,SubCategory,Brands
-from django.http import HttpResponseRedirect,HttpResponse,JsonResponse
-from blog.models  import Blogpost
+from product.models import Product, BestSaler, HotSaler, DealOfTheDay, SubCategory, Brands
+from django.http import HttpResponseRedirect, HttpResponse, JsonResponse
+from blog.models import Blogpost
 from . models import Contact
 from django.contrib import messages
 from accounts.views import genshiptoken
-from accounts.models import ShipToken
+from accounts.models import ShipToken, ProductReview
 import datetime
 from django.utils import timezone
 import requests
@@ -37,7 +37,7 @@ def home(request):
     #     response =requests.post(rurl,data=json.dumps(data, cls=DjangoJSONEncoder), headers=headers)
     #     print(response.json())
     #     print(response.json()['token'])
-        
+
     #     ship =ShipToken(
     #         token = response.json()['token'],
     #         id= 1,
@@ -50,8 +50,9 @@ def home(request):
     blog = Blogpost.objects.all()[:5]
     brands = Brands.objects.filter(is_publish=True)
     dealoftheday = DealOfTheDay.objects.filter().first()
-    context={'product':product,'bestsaler':bestsaler,'hotsaler':hotsaler,'dealoftheday':dealoftheday,'blog':blog,'brands':brands}
-    return render(request, 'index.html',context)
+    context = {'product': product, 'bestsaler': bestsaler, 'hotsaler': hotsaler,
+               'dealoftheday': dealoftheday, 'blog': blog, 'brands': brands}
+    return render(request, 'index.html', context)
 
 
 def shop(request):
@@ -63,34 +64,42 @@ def shop(request):
     filter_price2 = request.GET.get('max_price')
     order = request.GET.get('order')
     print(order)
-    if filter_price1 =='':
-        filter_price1=0
+    if filter_price1 == '':
+        filter_price1 = 0
     if filter_price2:
-        product=Product.objects.filter(dis_price__range=(int(filter_price1),int(filter_price2))).filter(is_publish=True)
+        product = Product.objects.filter(dis_price__range=(
+            int(filter_price1), int(filter_price2))).filter(is_publish=True)
     elif category:
-        product = Product.objects.filter(sub_category__category__category_name=category).filter(is_publish=True)
+        product = Product.objects.filter(
+            sub_category__category__category_name=category).filter(is_publish=True)
     elif subcategory:
-        product = Product.objects.filter(sub_category__category_name=subcategory).filter(is_publish=True)
+        product = Product.objects.filter(
+            sub_category__category_name=subcategory).filter(is_publish=True)
     elif brands:
-        product = Product.objects.filter(brands__brands_name=brands).filter(is_publish=True)
+        product = Product.objects.filter(
+            brands__brands_name=brands).filter(is_publish=True)
     elif order:
         if order == "htol":
-            product = Product.objects.filter(is_publish=True).order_by('-dis_price')
+            product = Product.objects.filter(
+                is_publish=True).order_by('-dis_price')
         elif order == "ltoh":
-            product = Product.objects.filter(is_publish=True).order_by('dis_price')
+            product = Product.objects.filter(
+                is_publish=True).order_by('dis_price')
         elif order == "newness":
-            product = Product.objects.filter(is_publish=True).order_by('-created_at')
+            product = Product.objects.filter(
+                is_publish=True).order_by('-created_at')
         else:
             product = Product.objects.filter(is_publish=True)
     else:
         product = Product.objects.filter(is_publish=True)
     allbrands = Brands.objects.filter(is_publish=True)
-    hotsaler =HotSaler.objects.all()
-    context = {'product':product,'hotsaler':hotsaler,'allbrands':allbrands}
-    return render(request,'shop.html',context)
+    hotsaler = HotSaler.objects.all()
+    context = {'product': product,
+               'hotsaler': hotsaler, 'allbrands': allbrands}
+    return render(request, 'shop.html', context)
 
 
-def product_detail(request,slug):
+def product_detail(request, slug):
     print(slug)
     product = Product.objects.filter(slug=slug).first()
     if not product:
@@ -102,10 +111,42 @@ def product_detail(request,slug):
             product = get_object_or_404(Product, uid=product_uuid)
         else:
             product = get_object_or_404(Product, slug=slug)
-    similar_product = Product.objects.filter(sub_category=product.sub_category).filter(is_publish=True)
-    context = {'product':product,'similar_product':similar_product}
-    return render(request,'product-details.html',context)
 
+    if request.method == 'POST':
+        if not request.user.is_authenticated:
+            messages.error(request, 'Please login to submit a review.')
+            return redirect('userlogin')
+
+        rating = request.POST.get('rating')
+        comment = request.POST.get('comment', '').strip()
+
+        if not rating:
+            messages.error(request, 'Rating is required.')
+        elif not comment:
+            messages.error(request, 'Review comment is required.')
+        else:
+            try:
+                rating_value = int(rating)
+                if rating_value < 1 or rating_value > 5:
+                    raise ValueError('Rating must be between 1 and 5')
+                ProductReview.objects.create(
+                    user=request.user,
+                    product=product,
+                    rating=rating_value,
+                    comment=comment
+                )
+                messages.success(request, 'Review submitted successfully.')
+                return redirect('product_detail', slug=slug)
+            except ValueError:
+                messages.error(
+                    request, 'Please select a valid rating between 1 and 5.')
+            except Exception as e:
+                messages.error(request, f'Unable to submit review: {e}')
+
+    similar_product = Product.objects.filter(
+        sub_category=product.sub_category).filter(is_publish=True)
+    context = {'product': product, 'similar_product': similar_product}
+    return render(request, 'product-details.html', context)
 
 
 def add_to_cart(request):
@@ -119,29 +160,28 @@ def add_to_cart(request):
     return HttpResponseRedirect(request.META.get('HTTP_REFERER', reverse('shopping_cart')))
 
 
-def add_to_wishlist(request,uid):
+def add_to_wishlist(request, uid):
     product = get_object_or_404(Product, uid=uid)
     add_wishlist_product(request, product)
     return HttpResponseRedirect(request.META.get('HTTP_REFERER', reverse('wishlist')))
 
 
-def buynow(request,uid):
+def buynow(request, uid):
     product = get_object_or_404(Product, uid=uid)
     add_cart_product(request, product, 1)
     return redirect('shopping_cart')
 
 
+def shopping_cart(request):
+    return render(request, 'shopping-cart.html')
 
-def shopping_cart(request): 
-    return render(request,'shopping-cart.html')
 
-
-def deletesessioncart(request,uid):
+def deletesessioncart(request, uid):
     remove_cart_product(request, uid)
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 
-def deletesessionwishlist(request,uid):
+def deletesessionwishlist(request, uid):
     remove_wishlist_product(request, uid)
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
@@ -150,11 +190,11 @@ def wishlist(request):
     context = {
         'product_in_wishlist': get_wishlist_products(request)
     }
-    return render(request,'wishlist.html', context)
+    return render(request, 'wishlist.html', context)
 
 
 def about(request):
-    return render(request,'about-us.html')
+    return render(request, 'about-us.html')
 
 
 def order_tracking(request):
@@ -162,62 +202,64 @@ def order_tracking(request):
 
 
 def contact(request):
-    if request.method =='POST':
+    if request.method == 'POST':
         name = request.POST['name']
         email = request.POST['email']
         desc = request.POST['message']
         # mobile = request.POST['mobile']
-        contact = Contact(name=name,email=email,desc=desc)
+        contact = Contact(name=name, email=email, desc=desc)
         contact.save()
-        messages.success(request,"you message is sended successfully")
-    return render(request,'contact-us.html')
+        messages.success(request, "you message is sended successfully")
+    return render(request, 'contact-us.html')
 
 
 def privacy(request):
-    return render(request,'privacy.html')
+    return render(request, 'privacy.html')
 
 
 def refunds(request):
-    return render(request,'refunds.html')
+    return render(request, 'refunds.html')
 
 
 def shipping_policy(request):
-    return render(request,'shipping-policy.html')
+    return render(request, 'shipping-policy.html')
 
 
 def terms(request):
-    return render(request,'terms.html')
+    return render(request, 'terms.html')
 
 
 def search(request):
     category = request.GET.get('s')
     query = request.GET.get('q')
     if category:
-        product = Product.objects.filter(product_name__icontains=query,category__category_name=query)
+        product = Product.objects.filter(
+            product_name__icontains=query, category__category_name=query)
     else:
         product = Product.objects.filter(product_name__icontains=query)
-    context = {'product':product}
-    return render(request,'search.html',context)
+    context = {'product': product}
+    return render(request, 'search.html', context)
 
 
 def get_search(request):
     category = request.GET.get('s')
     query = request.GET.get('q')
-    payload =[]
+    payload = []
     if category:
-        product = Product.objects.filter(product_name__icontains=query,category__category_name=category)
+        product = Product.objects.filter(
+            product_name__icontains=query, category__category_name=category)
     else:
         product = Product.objects.filter(product_name__icontains=query)
     print(product)
     for obj in product:
         payload.append({
             "name": obj.product_name,
-            "slug":obj.slug
+            "slug": obj.slug
         })
     print('response')
     return JsonResponse({
-        "status":200,
-        "payload":payload
+        "status": 200,
+        "payload": payload
     })
 
 
