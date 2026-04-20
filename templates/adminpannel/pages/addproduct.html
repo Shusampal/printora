@@ -116,7 +116,11 @@
             <div class="card-body">
               <div class="text-center">Add Product</div>
               <hr />
-              <form action="" method="post" id="productForm">
+              <form
+                action="{% url 'addproduct' %}"
+                method="post"
+                id="productForm"
+              >
                 {% csrf_token %}
                 <div>
                   <label for=""
