@@ -90,12 +90,44 @@ WSGI_APPLICATION = 'printora.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+DATABASE_URL = config('DATABASE_URL', default='')
+POSTGRES_NAME = config('POSTGRES_DB', default='')
+POSTGRES_USER = config('POSTGRES_USER', default='')
+POSTGRES_PASSWORD = config('POSTGRES_PASSWORD', default='')
+POSTGRES_HOST = config('POSTGRES_HOST', default='')
+POSTGRES_PORT = config('POSTGRES_PORT', default='')
+
+if DATABASE_URL:
+    from urllib.parse import urlparse
+    parsed_url = urlparse(DATABASE_URL)
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': parsed_url.path[1:],
+            'USER': parsed_url.username or '',
+            'PASSWORD': parsed_url.password or '',
+            'HOST': parsed_url.hostname or '',
+            'PORT': parsed_url.port or '',
+        }
     }
-}
+elif POSTGRES_NAME:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': POSTGRES_NAME,
+            'USER': POSTGRES_USER,
+            'PASSWORD': POSTGRES_PASSWORD,
+            'HOST': POSTGRES_HOST,
+            'PORT': POSTGRES_PORT,
+        }
+    }
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
+    }
 
 
 # Password validation
