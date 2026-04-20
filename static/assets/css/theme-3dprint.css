@@ -1,0 +1,313 @@
+/**
+ * Printora — 3D printer store theme overrides
+ * Loaded after main styles; keeps layout, shifts brand + accents.
+ */
+:root {
+  --dl-ink: #0f172a;
+  --dl-ink-muted: #475569;
+  --dl-accent: #0891b2;
+  --dl-accent-hover: #0e7490;
+  --dl-surface: #f8fafc;
+  --dl-topbar: linear-gradient(90deg, #0f172a 0%, #1e293b 45%, #0f172a 100%);
+}
+
+body {
+  color: var(--dl-ink);
+  background-color: var(--dl-surface);
+}
+
+a:hover {
+  color: var(--dl-accent-hover);
+}
+
+/* Top bar — industrial strip */
+.topbar-section.section {
+  background: var(--dl-topbar) !important;
+  border-bottom: 1px solid rgba(8, 145, 178, 0.35);
+}
+
+.topbar-section .text-white {
+  letter-spacing: 0.02em;
+}
+
+/* Primary buttons & hovers used across templates */
+.btn-primary,
+.btn-hover-primary:hover,
+.btn-dark.btn-hover-primary:hover {
+  background-color: var(--dl-accent) !important;
+  border-color: var(--dl-accent) !important;
+}
+
+.btn-primary:hover,
+.btn-hover-primary {
+  background-color: var(--dl-accent-hover) !important;
+  border-color: var(--dl-accent-hover) !important;
+}
+
+.btn-outline-dark.btn-hover-success:hover {
+  background-color: var(--dl-accent) !important;
+  border-color: var(--dl-accent) !important;
+  color: #fff !important;
+}
+
+/* Main navigation — replace legacy brown */
+.site-main-menu > ul > li > a {
+  color: var(--dl-ink) !important;
+  font-weight: 600;
+}
+
+.site-main-menu > ul > li:hover > a,
+.site-main-menu > ul > li.active > a {
+  color: var(--dl-accent) !important;
+}
+
+/* Header icons (replaces inline #412500) */
+.dl-header-icon {
+  color: var(--dl-accent) !important;
+}
+
+/* Home slider titles — crisper hierarchy */
+.home1-slide-item .title {
+  text-shadow: 0 2px 24px rgba(15, 23, 42, 0.45);
+}
+
+.home1-slide-item .sub-title {
+  opacity: 0.95;
+}
+
+/* Section subtitles */
+.section-title .sub-title,
+.section-title2 .sub-title,
+.section-title3 .sub-title {
+  color: var(--dl-accent);
+  letter-spacing: 0.12em;
+}
+
+/* Icon feature row */
+.icon-box5 .icon[data-bg-color="#f4ede7"] {
+  background-color: #ecfeff !important;
+  color: var(--dl-accent) !important;
+}
+
+/* Testimonial / content cards on home */
+.testimonial2 p {
+  color: var(--dl-ink-muted);
+}
+
+/* Footer readability */
+.footer2-section .widget-about p {
+  color: var(--dl-ink-muted);
+}
+
+/* ========== Landing page ========== */
+.dl-home-slider {
+  box-shadow: 0 12px 40px rgba(15, 23, 42, 0.12);
+}
+
+/* Trust strip */
+.dl-trust-strip {
+  background: #fff;
+  border-bottom: 1px solid rgba(15, 23, 42, 0.08);
+  padding: 1.25rem 0;
+  margin-top: -1px;
+  position: relative;
+  z-index: 2;
+}
+
+.dl-trust-strip__item {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  height: 100%;
+  padding: 0.75rem 0.5rem;
+  border-radius: 0.5rem;
+  transition: background 0.2s ease;
+}
+
+@media (min-width: 992px) {
+  .dl-trust-strip__item {
+    padding: 0.75rem 1rem;
+  }
+}
+
+.dl-trust-strip__item:hover {
+  background: rgba(8, 145, 178, 0.06);
+}
+
+.dl-trust-strip__icon {
+  flex-shrink: 0;
+  width: 2.5rem;
+  height: 2.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0.5rem;
+  background: linear-gradient(145deg, #ecfeff 0%, #cffafe 100%);
+  color: var(--dl-accent);
+  font-size: 1rem;
+}
+
+.dl-trust-strip__item strong {
+  display: block;
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--dl-ink);
+  line-height: 1.3;
+}
+
+.dl-trust-strip__item span:not(.dl-trust-strip__icon) {
+  display: block;
+  font-size: 0.8rem;
+  color: var(--dl-ink-muted);
+  margin-top: 0.15rem;
+  line-height: 1.35;
+}
+
+/* Promo band */
+.dl-promo-band {
+  background: linear-gradient(120deg, #0f172a 0%, #1e3a5f 55%, #0f172a 100%);
+  color: #f1f5f9;
+  padding: 2.5rem 0;
+  margin: 0;
+  border-bottom: 1px solid rgba(8, 145, 178, 0.25);
+}
+
+@media (min-width: 992px) {
+  .dl-promo-band {
+    padding: 3rem 0;
+  }
+}
+
+.dl-promo-band__eyebrow {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  color: #67e8f9;
+  margin-bottom: 0.5rem;
+}
+
+.dl-promo-band__title {
+  font-size: clamp(1.35rem, 2.5vw, 1.85rem);
+  font-weight: 700;
+  line-height: 1.25;
+  margin: 0 0 0.75rem;
+  color: #fff;
+}
+
+.dl-promo-band__lead {
+  margin: 0;
+  font-size: 1rem;
+  line-height: 1.6;
+  color: rgba(241, 245, 249, 0.85);
+  max-width: 38rem;
+}
+
+.dl-promo-band__btn {
+  border-radius: 0.5rem;
+  font-weight: 600;
+  padding: 0.65rem 1.35rem;
+}
+
+.dl-promo-band__btn--ghost:hover {
+  background: rgba(255, 255, 255, 0.12);
+  color: #fff;
+  border-color: rgba(255, 255, 255, 0.65);
+}
+
+.dl-promo-band .text-lg-end .dl-promo-band__btn + .dl-promo-band__btn {
+  margin-left: 0.5rem;
+}
+
+@media (max-width: 991px) {
+  .dl-promo-band .text-lg-end {
+    text-align: left !important;
+  }
+
+  .dl-promo-band .dl-promo-band__btn {
+    width: 100%;
+    margin: 0.35rem 0 !important;
+  }
+}
+
+/* Section headings */
+.dl-section-head {
+  margin-bottom: 2rem;
+  max-width: 42rem;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+@media (min-width: 992px) {
+  .dl-section-head {
+    margin-bottom: 2.5rem;
+  }
+}
+
+.dl-section-head__eyebrow {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  color: var(--dl-accent);
+  font-weight: 600;
+  margin-bottom: 0.35rem;
+}
+
+.dl-section-head__title {
+  font-size: clamp(1.5rem, 2.5vw, 2rem);
+  font-weight: 700;
+  color: var(--dl-ink);
+  margin: 0 0 0.75rem;
+  line-height: 1.25;
+}
+
+.dl-section-head__text {
+  margin: 0;
+  font-size: 1rem;
+  line-height: 1.65;
+  color: var(--dl-ink-muted);
+}
+
+.dl-landing-categories {
+  margin-top: 2rem;
+}
+
+.dl-lead {
+  font-size: 1rem;
+  line-height: 1.65;
+  color: var(--dl-ink-muted);
+  max-width: 36rem;
+}
+
+/* Product tab pills */
+.dl-pill-tabs .nav-item .btn {
+  border-radius: 999px;
+  border: 1px solid rgba(15, 23, 42, 0.12);
+  background: #fff;
+  color: var(--dl-ink-muted);
+  font-weight: 600;
+  font-size: 0.75rem;
+  letter-spacing: 0.06em;
+  padding: 0.5rem 1rem;
+  transition:
+    color 0.2s,
+    background 0.2s,
+    border-color 0.2s,
+    box-shadow 0.2s;
+}
+
+.dl-pill-tabs .nav-item .btn:hover {
+  border-color: var(--dl-accent);
+  color: var(--dl-accent);
+  background: rgba(8, 145, 178, 0.06);
+}
+
+.dl-pill-tabs .nav-item .btn.active {
+  background: var(--dl-accent) !important;
+  border-color: var(--dl-accent) !important;
+  color: #fff !important;
+  box-shadow: 0 4px 14px rgba(8, 145, 178, 0.35);
+}
+
+.dl-landing-products .section-title .title {
+  margin-bottom: 0;
+}
