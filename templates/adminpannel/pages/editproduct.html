@@ -59,19 +59,25 @@
                   <div class="px-2 col-md-6">
                     <label for="">Mrp Price</label>
                     <input
-                      type="text"
+                      type="number"
                       class="form-control"
                       name="mrp_price"
                       value="{{product.mrp_price}}"
+                      min="0"
+                      max="2147483647"
+                      required
                     />
                   </div>
                   <div class="px-2 col-md-6">
                     <label for="">Discounted Price</label>
                     <input
-                      type="text"
+                      type="number"
                       class="form-control"
                       name="dis_price"
                       value="{{product.dis_price}}"
+                      min="0"
+                      max="2147483647"
+                      required
                     />
                   </div>
                 </div>
@@ -80,37 +86,50 @@
                   <div class="mx-2 col-md-2">
                     <label for="">Length (cm)</label>
                     <input
-                      type="text"
+                      type="number"
                       value="{{product.length}}"
                       class="form-control"
                       name="length"
+                      min="0"
+                      max="2147483647"
+                      required
                     />
                   </div>
                   <div class="mx-2 col-md-2">
                     <label for="">Breadth (cm)</label>
                     <input
-                      type="text"
+                      type="number"
                       value="{{product.breadth}}"
                       class="form-control"
                       name="breadth"
+                      min="0"
+                      max="2147483647"
+                      required
                     />
                   </div>
                   <div class="mx-2 col-md-2">
                     <label for="">Height (cm)</label>
                     <input
-                      type="text"
+                      type="number"
                       value="{{product.height}}"
                       class="form-control"
                       name="height"
+                      min="0"
+                      max="2147483647"
+                      required
                     />
                   </div>
                   <div class="mx-2 col-md-3">
                     <label for="">Weight (gram)</label>
                     <input
-                      type="text"
+                      type="number"
                       value="{{product.weight}}"
                       class="form-control"
                       name="weight"
+                      min="0"
+                      max="99999.99"
+                      step="0.01"
+                      required
                     />
                   </div>
                 </div>

@@ -164,3 +164,7 @@ MEDIA_ROOT = BASE_DIR / "media"
 MESSAGE_TAGS = {
     messages.ERROR: 'danger'
 }
+
+# Increase POST data size limit to handle large descriptions
+DATA_UPLOAD_MAX_MEMORY_SIZE = 10 * 1024 * 1024  # 10MB
+FILE_UPLOAD_MAX_MEMORY_SIZE = 10 * 1024 * 1024  # 10MB

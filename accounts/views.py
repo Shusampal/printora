@@ -878,36 +878,47 @@ def addproduct(request):
             title = request.POST.get('title', '').strip()
             subcategory = request.POST.get('subcategory', '').strip()
             brands = request.POST.get('brands', '').strip()
-            mrp_price = request.POST.get('mrp_price', '').strip()
-            dis_price = request.POST.get('dis_price', '').strip()
+            mrp_price_str = request.POST.get('mrp_price', '').strip()
+            dis_price_str = request.POST.get('dis_price', '').strip()
             desc = request.POST.get('desc', '').strip()
-            length = request.POST.get('length', '').strip()
-            breadth = request.POST.get('breadth', '').strip()
-            height = request.POST.get('height', '').strip()
-            weight = request.POST.get('weight', '').strip()
+            length_str = request.POST.get('length', '').strip()
+            breadth_str = request.POST.get('breadth', '').strip()
+            height_str = request.POST.get('height', '').strip()
+            weight_str = request.POST.get('weight', '').strip()
 
             # Validation
             if not title:
                 messages.error(request, 'Product title is required')
+            elif len(title) > 200:
+                messages.error(
+                    request, 'Product title cannot exceed 200 characters')
             elif not subcategory:
                 messages.error(request, 'Please select a subcategory')
             elif not brands:
                 messages.error(request, 'Please select a brand')
-            elif not mrp_price or float(mrp_price) <= 0:
+            elif not mrp_price_str or float(mrp_price_str) <= 0:
                 messages.error(request, 'Please enter valid MRP price')
-            elif not dis_price or float(dis_price) <= 0:
+            elif not dis_price_str or float(dis_price_str) <= 0:
                 messages.error(request, 'Please enter valid discounted price')
-            elif not length or float(length) <= 0:
+            elif not length_str or float(length_str) <= 0:
                 messages.error(request, 'Please enter valid length')
-            elif not breadth or float(breadth) <= 0:
+            elif not breadth_str or float(breadth_str) <= 0:
                 messages.error(request, 'Please enter valid breadth')
-            elif not height or float(height) <= 0:
+            elif not height_str or float(height_str) <= 0:
                 messages.error(request, 'Please enter valid height')
-            elif not weight or float(weight) <= 0:
+            elif not weight_str or float(weight_str) <= 0:
                 messages.error(request, 'Please enter valid weight')
             elif not desc:
                 messages.error(request, 'Product description is required')
             else:
+                # Convert to proper data types
+                mrp_price = int(float(mrp_price_str))
+                dis_price = int(float(dis_price_str))
+                length = int(float(length_str))
+                breadth = int(float(breadth_str))
+                height = int(float(height_str))
+                weight = float(weight_str)
+
                 product = Product(
                     product_name=title,
                     sub_category=SubCategory.objects.get(uid=subcategory),
@@ -946,33 +957,44 @@ def editproduct(request, uid):
     if user_obj.is_staff != True:
         return redirect('adminlogin')
     if request.method == "POST":
-        title = request.POST['title']
-        # category = request.POST['category']
-        subcategory = request.POST['subcategory']
-        brands = request.POST['brands']
-        mrp_price = request.POST['mrp_price']
-        dis_price = request.POST['dis_price']
-        desc = request.POST['desc']
+        try:
+            title = request.POST['title'].strip()
+            subcategory = request.POST['subcategory'].strip()
+            brands = request.POST['brands'].strip()
+            mrp_price_str = request.POST['mrp_price'].strip()
+            dis_price_str = request.POST['dis_price'].strip()
+            desc = request.POST['desc'].strip()
+            length_str = request.POST['length'].strip()
+            breadth_str = request.POST['breadth'].strip()
+            height_str = request.POST['height'].strip()
+            weight_str = request.POST['weight'].strip()
 
-        length = request.POST['length']
-        breadth = request.POST['breadth']
-        height = request.POST['height']
-        weight = request.POST['weight']
+            # Convert to proper data types
+            mrp_price = int(float(mrp_price_str))
+            dis_price = int(float(dis_price_str))
+            length = int(float(length_str))
+            breadth = int(float(breadth_str))
+            height = int(float(height_str))
+            weight = float(weight_str)
 
-        product = Product.objects.get(uid=uid)
-        print(product)
-        print(SubCategory.objects.get(uid=subcategory))
-        product.product_name = title
-        product.sub_category = SubCategory.objects.get(uid=subcategory)
-        product.brands = Brands.objects.get(uid=brands)
-        product.mrp_price = mrp_price
-        product.dis_price = dis_price
-        product.product_description = desc
-        product.length = length
-        product.breadth = breadth
-        product.height = height
-        product.weight = weight
-        product.save()
+            product = Product.objects.get(uid=uid)
+            product.product_name = title
+            product.sub_category = SubCategory.objects.get(uid=subcategory)
+            product.brands = Brands.objects.get(uid=brands)
+            product.mrp_price = mrp_price
+            product.dis_price = dis_price
+            product.product_description = desc
+            product.length = length
+            product.breadth = breadth
+            product.height = height
+            product.weight = weight
+            product.save()
+            messages.success(request, 'Product updated successfully')
+        except ValueError as e:
+            messages.error(
+                request, 'Please enter valid numeric values for price and dimensions')
+        except Exception as e:
+            messages.error(request, f'Error updating product: {str(e)}')
 
     product = Product.objects.get(uid=uid)
     sub_category = SubCategory.objects.all()
