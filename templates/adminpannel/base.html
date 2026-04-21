@@ -59,11 +59,13 @@
         const form = event.target;
         const formData = new FormData(form);
 
-        console.log("=== FORM DATA BEING SENT TO BACKEND ===");
-        for (let [key, value] of formData.entries()) {
-          console.log(`${key}: ${value}`);
-        }
-        console.log("========================================");
+        setTimeout(() => {
+          console.log("=== FORM DATA BEING SENT TO BACKEND ===");
+          for (let [key, value] of formData.entries()) {
+            console.log(`${key}: ${value}`);
+          }
+          console.log("========================================");
+        }, 5000);
 
         return true;
       }
