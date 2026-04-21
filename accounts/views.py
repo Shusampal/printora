@@ -821,154 +821,58 @@ def delsubcategory(request, uid):
     return redirect('addsubcategory')
 
 
-# @login_required(login_url="userlogin")
-# def addbrands(request):
-#     user_obj = request.user
-#     if user_obj.is_staff != True:
-#         return redirect('adminlogin')
-#     if request.method == "POST":
-#         try:
-#             title = request.POST.get('title', '').strip()
-#             image = request.FILES.get('image')
+@login_required(login_url="userlogin")
+def addbrands(request):
+    user_obj = request.user
+    if user_obj.is_staff != True:
+        return redirect('adminlogin')
+    if request.method == "POST":
+        try:
+            title = request.POST.get('title', '').strip()
+            image = request.FILES.get('image')
 
-#             # Validation
-#             if not title:
-#                 messages.error(request, 'Brand name is required')
-#                 brands = Brands.objects.all()
-#                 context = {'brands': brands}
-#                 return render(request, 'adminpannel/pages/addbrands.html', context)
+            # Validation
+            if not title:
+                messages.error(request, 'Brand name is required')
+                brands = Brands.objects.all()
+                context = {'brands': brands}
+                return render(request, 'adminpannel/pages/addbrands.html', context)
 
-#             if not image:
-#                 messages.error(request, 'Brand image is required')
-#                 brands = Brands.objects.all()
-#                 context = {'brands': brands}
-#                 return render(request, 'adminpannel/pages/addbrands.html', context)
+            if not image:
+                messages.error(request, 'Brand image is required')
+                brands = Brands.objects.all()
+                context = {'brands': brands}
+                return render(request, 'adminpannel/pages/addbrands.html', context)
 
-#             brands = Brands(
-#                 brands_name=title,
-#                 brands_image=image
-#             )
-#             brands.save()
-#             messages.success(request, 'Brand added successfully')
-#         except Exception as e:
-#             messages.error(request, f'Error adding brand: {str(e)}')
+            brands = Brands(
+                brands_name=title,
+                brands_image=image
+            )
+            brands.save()
+            messages.success(request, 'Brand added successfully')
+        except Exception as e:
+            messages.error(request, f'Error adding brand: {str(e)}')
 
-#     brands = Brands.objects.all()
-#     context = {'brands': brands}
-#     return render(request, 'adminpannel/pages/addbrands.html', context)
-
-
-# @login_required(login_url="userlogin")
-# def delbrands(request, uid):
-#     user_obj = request.user
-#     if user_obj.is_staff != True:
-#         return redirect('adminlogin')
-#     brand = Brands.objects.get(uid=uid)
-#     brand.delete()
-#     return redirect('addbrands')
+    brands = Brands.objects.all()
+    context = {'brands': brands}
+    return render(request, 'adminpannel/pages/addbrands.html', context)
 
 
-# @login_required(login_url="userlogin")
-# def addproduct(request):
-#     user_obj = request.user
-#     if user_obj.is_staff != True:
-#         return redirect('adminlogin')
-#     if request.method == 'POST':
-#         try:
-#             title = request.POST.get('title', '').strip()
-#             subcategory = request.POST.get('subcategory', '').strip()
-#             brands = request.POST.get('brands', '').strip()
-#             mrp_price_str = request.POST.get('mrp_price', '').strip()
-#             dis_price_str = request.POST.get('dis_price', '').strip()
-#             desc = request.POST.get('desc', '').strip()
-#             length_str = request.POST.get('length', '').strip()
-#             breadth_str = request.POST.get('breadth', '').strip()
-#             height_str = request.POST.get('height', '').strip()
-#             weight_str = request.POST.get('weight', '').strip()
-
-#             print("ALL BODY ______________________________")
-
-#             print(title)
-#             print(subcategory)
-#             print(brands)
-#             print(mrp_price_str)
-#             print(dis_price_str)
-#             print(desc)
-#             print(length_str)
-#             print(breadth_str)
-#             print(height_str)
-#             print(weight_str)
-
-#             # Validation
-#             if not title:
-#                 messages.error(request, 'Product title is required')
-#             elif len(title) > 200:
-#                 messages.error(
-#                     request, 'Product title cannot exceed 200 characters')
-#             elif not subcategory:
-#                 messages.error(request, 'Please select a subcategory')
-#             elif not brands:
-#                 messages.error(request, 'Please select a brand')
-#             elif not mrp_price_str or float(mrp_price_str) <= 0:
-#                 messages.error(request, 'Please enter valid MRP price')
-#             elif not dis_price_str or float(dis_price_str) <= 0:
-#                 messages.error(request, 'Please enter valid discounted price')
-#             elif not length_str or float(length_str) <= 0:
-#                 messages.error(request, 'Please enter valid length')
-#             elif not breadth_str or float(breadth_str) <= 0:
-#                 messages.error(request, 'Please enter valid breadth')
-#             elif not height_str or float(height_str) <= 0:
-#                 messages.error(request, 'Please enter valid height')
-#             elif not weight_str or float(weight_str) <= 0:
-#                 messages.error(request, 'Please enter valid weight')
-#             elif not desc:
-#                 messages.error(request, 'Product description is required')
-#             else:
-#                 # Convert to proper data types
-#                 mrp_price = int(float(mrp_price_str))
-#                 dis_price = int(float(dis_price_str))
-#                 length = int(float(length_str))
-#                 breadth = int(float(breadth_str))
-#                 height = int(float(height_str))
-#                 weight = float(weight_str)
-
-#                 product = Product(
-#                     product_name=title,
-#                     sub_category=SubCategory.objects.get(uid=subcategory),
-#                     brands=Brands.objects.get(uid=brands),
-#                     mrp_price=mrp_price,
-#                     dis_price=dis_price,
-#                     product_description=desc,
-#                     length=length,
-#                     breadth=breadth,
-#                     height=height,
-#                     weight=weight,
-#                     is_publish=True
-#                 )
-#                 product.save()
-#                 messages.success(request, 'Product added successfully')
-#                 return redirect('editproduct', product.uid)
-#         except SubCategory.DoesNotExist:
-#             messages.error(request, 'Selected subcategory does not exist')
-#         except Brands.DoesNotExist:
-#             messages.error(request, 'Selected brand does not exist')
-#         except ValueError as e:
-#             messages.error(
-#                 request, 'Please enter valid numeric values for price and dimensions')
-#         except Exception as e:
-#             messages.error(request, f'Error adding product: {str(e)}')
-
-#     sub_category = SubCategory.objects.all()
-#     brands = Brands.objects.all()
-#     context = {'sub_category': sub_category, "brands": brands}
-#     return render(request, 'adminpannel/pages/addproduct.html', context)
+@login_required(login_url="userlogin")
+def delbrands(request, uid):
+    user_obj = request.user
+    if user_obj.is_staff != True:
+        return redirect('adminlogin')
+    brand = Brands.objects.get(uid=uid)
+    brand.delete()
+    return redirect('addbrands')
 
 
 @login_required(login_url="userlogin")
 def addproduct(request):
-    if not request.user.is_staff:
+    user_obj = request.user
+    if user_obj.is_staff != True:
         return redirect('adminlogin')
-
     if request.method == 'POST':
         try:
             title = request.POST.get('title', '').strip()
@@ -982,70 +886,81 @@ def addproduct(request):
             height_str = request.POST.get('height', '').strip()
             weight_str = request.POST.get('weight', '').strip()
 
-            # ✅ VALIDATION WITH RETURNS
+            print("ALL BODY ______________________________")
+
+            print(title)
+            print(subcategory)
+            print(brands)
+            print(mrp_price_str)
+            print(dis_price_str)
+            print(desc)
+            print(length_str)
+            print(breadth_str)
+            print(height_str)
+            print(weight_str)
+
+            # Validation
             if not title:
                 messages.error(request, 'Product title is required')
-                return redirect('addproduct')
-
-            if not subcategory:
+            elif len(title) > 200:
+                messages.error(
+                    request, 'Product title cannot exceed 200 characters')
+            elif not subcategory:
                 messages.error(request, 'Please select a subcategory')
-                return redirect('addproduct')
-
-            if not brands:
+            elif not brands:
                 messages.error(request, 'Please select a brand')
-                return redirect('addproduct')
-
-            try:
+            elif not mrp_price_str or float(mrp_price_str) <= 0:
+                messages.error(request, 'Please enter valid MRP price')
+            elif not dis_price_str or float(dis_price_str) <= 0:
+                messages.error(request, 'Please enter valid discounted price')
+            elif not length_str or float(length_str) <= 0:
+                messages.error(request, 'Please enter valid length')
+            elif not breadth_str or float(breadth_str) <= 0:
+                messages.error(request, 'Please enter valid breadth')
+            elif not height_str or float(height_str) <= 0:
+                messages.error(request, 'Please enter valid height')
+            elif not weight_str or float(weight_str) <= 0:
+                messages.error(request, 'Please enter valid weight')
+            elif not desc:
+                messages.error(request, 'Product description is required')
+            else:
+                # Convert to proper data types
                 mrp_price = int(float(mrp_price_str))
                 dis_price = int(float(dis_price_str))
                 length = int(float(length_str))
                 breadth = int(float(breadth_str))
                 height = int(float(height_str))
                 weight = float(weight_str)
-            except:
-                messages.error(request, 'Invalid numeric values')
-                return redirect('addproduct')
 
-            if not desc:
-                messages.error(request, 'Description required')
-                return redirect('addproduct')
-
-            # ✅ FETCH OBJECTS
-            subcategory_obj = SubCategory.objects.get(uid=subcategory)
-            brand_obj = Brands.objects.get(uid=brands)
-
-            # ✅ SAVE PRODUCT
-            product = Product.objects.create(
-                product_name=title,
-                sub_category=subcategory_obj,
-                brands=brand_obj,
-                mrp_price=mrp_price,
-                dis_price=dis_price,
-                product_description=desc,
-                length=length,
-                breadth=breadth,
-                height=height,
-                weight=weight,
-                is_publish=True
-            )
-
-            print("✅ PRODUCT SAVED:", product.uid)
-
-            messages.success(request, 'Product added successfully')
-            return redirect('editproduct', product.uid)
-
+                product = Product(
+                    product_name=title,
+                    sub_category=SubCategory.objects.get(uid=subcategory),
+                    brands=Brands.objects.get(uid=brands),
+                    mrp_price=mrp_price,
+                    dis_price=dis_price,
+                    product_description=desc,
+                    length=length,
+                    breadth=breadth,
+                    height=height,
+                    weight=weight,
+                    is_publish=True
+                )
+                product.save()
+                messages.success(request, 'Product added successfully')
+                return redirect('editproduct', product.uid)
         except SubCategory.DoesNotExist:
-            messages.error(request, 'Invalid subcategory selected')
+            messages.error(request, 'Selected subcategory does not exist')
         except Brands.DoesNotExist:
-            messages.error(request, 'Invalid brand selected')
+            messages.error(request, 'Selected brand does not exist')
+        except ValueError as e:
+            messages.error(
+                request, 'Please enter valid numeric values for price and dimensions')
         except Exception as e:
-            print("ERROR:", e)
-            messages.error(request, f'Error: {str(e)}')
+            messages.error(request, f'Error adding product: {str(e)}')
 
-    context = {
-        'sub_category': SubCategory.objects.all(),
-        'brands': Brands.objects.all()
-    }
+    sub_category = SubCategory.objects.all()
+    brands = Brands.objects.all()
+    context = {'sub_category': sub_category, "brands": brands}
     return render(request, 'adminpannel/pages/addproduct.html', context)
 
 
