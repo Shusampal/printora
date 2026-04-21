@@ -890,7 +890,7 @@ def addproduct(request):
 
             print(title, type(title))
             print(subcategory, type(subcategory))
-            print(brands, type(brands))
+            print("brands: ", brands)
             print(mrp_price_str, type(mrp_price_str))
             print(dis_price_str, type(dis_price_str))
             print(desc, type(desc))
