@@ -886,6 +886,19 @@ def addproduct(request):
             height_str = request.POST.get('height', '').strip()
             weight_str = request.POST.get('weight', '').strip()
 
+            print("ALL BODY ______________________________")
+
+            print(title)
+            print(subcategory)
+            print(brands)
+            print(mrp_price_str)
+            print(dis_price_str)
+            print(desc)
+            print(length_str)
+            print(breadth_str)
+            print(height_str)
+            print(weight_str)
+
             # Validation
             if not title:
                 messages.error(request, 'Product title is required')
