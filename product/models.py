@@ -4,7 +4,7 @@ from django.utils.text import slugify
 from ckeditor.fields import RichTextField
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db.models import Avg
-# Create your models here.
+import uuid
 
 
 class Category(BaseModel):
@@ -71,8 +71,8 @@ class Product(BaseModel):
     product_name = models.CharField(max_length=200)
     sub_category = models.ForeignKey(
         SubCategory, on_delete=models.SET_NULL, null=True, blank=True, related_name="products")
-    brands = models.ForeignKey(Brands, on_delete=models.SET_NULL,
-                               null=True, blank=True, related_name="productbrand")
+    brands = models.ForeignKey(
+        Brands, on_delete=models.SET_NULL, null=True, blank=True, related_name="productbrand")
     mrp_price = models.IntegerField()
     dis_price = models.IntegerField()
     product_description = RichTextField()
@@ -84,18 +84,26 @@ class Product(BaseModel):
     slug = models.SlugField(max_length=200, unique=True, null=True, blank=True)
     color_varient = models.ManyToManyField(ColorVarient, blank=True)
     size_varient = models.ManyToManyField(SizeVarient, blank=True)
-    # fake_review = models.IntegerField(null=True,blank=True)
-    # fake_rating = models.DecimalField(max_digits=5, decimal_places=2,null=True,blank=True)
 
-    def save(self, *arg, **kwargs):
-        self.slug = slugify(self.product_name)
-        super(Product, self).save(*arg, **kwargs)
+    def save(self, *args, **kwargs):
+        # ✅ FIXED: unique slug generation (no breaking changes)
+        if not self.slug:
+            base_slug = slugify(self.product_name)
+            unique_slug = base_slug
+
+            while Product.objects.filter(slug=unique_slug).exists():
+                unique_slug = f"{base_slug}-{uuid.uuid4().hex[:6]}"
+
+            self.slug = unique_slug
+
+        super(Product, self).save(*args, **kwargs)
 
     def __str__(self):
         return self.product_name
 
     def get_product_price_by_size(self, size):
-        return self.price + SizeVarient.objects.get(size_name=size).price
+        # ✅ FIXED: self.price → self.dis_price
+        return self.dis_price + SizeVarient.objects.get(size_name=size).price
 
     def total_reviews(self):
         return self.product_reviews.all().count()
