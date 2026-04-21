@@ -274,129 +274,19 @@
                 </div>
               </form>
               <script>
-                let editorInstance = null;
-
-                // Initialize CKEditor and store the instance
-                if (document.querySelector("#editor")) {
-                  ClassicEditor.create(document.querySelector("#editor"))
-                    .then((editor) => {
-                      editorInstance = editor;
-                    })
-                    .catch((error) => {
-                      console.error(error);
-                    });
-                }
-
-                // Form validation
+                // Handle form submission and capture CKEditor content
                 document
                   .getElementById("productForm")
                   .addEventListener("submit", function (e) {
-                    const title = document
-                      .querySelector('input[name="title"]')
-                      .value.trim();
-                    const subcategory = document.querySelector(
-                      'select[name="subcategory"]',
-                    ).value;
-                    const brands = document.querySelector(
-                      'select[name="brands"]',
-                    ).value;
-                    const mrp_price = parseFloat(
-                      document
-                        .querySelector('input[name="mrp_price"]')
-                        .value.trim(),
-                    );
-                    const dis_price = parseFloat(
-                      document
-                        .querySelector('input[name="dis_price"]')
-                        .value.trim(),
-                    );
-                    const length = parseFloat(
-                      document
-                        .querySelector('input[name="length"]')
-                        .value.trim(),
-                    );
-                    const breadth = parseFloat(
-                      document
-                        .querySelector('input[name="breadth"]')
-                        .value.trim(),
-                    );
-                    const height = parseFloat(
-                      document
-                        .querySelector('input[name="height"]')
-                        .value.trim(),
-                    );
-                    const weight = parseFloat(
-                      document
-                        .querySelector('input[name="weight"]')
-                        .value.trim(),
-                    );
-
-                    // Get description from CKEditor instance
-                    let desc = "";
-                    if (editorInstance) {
-                      desc = editorInstance.getData().trim();
-                    } else {
-                      desc = document
-                        .querySelector('textarea[name="desc"]')
-                        .value.trim();
-                    }
-
-                    if (!title) {
-                      e.preventDefault();
-                      toastr.error("Please enter product title");
-                      return false;
-                    }
-                    if (!subcategory) {
-                      e.preventDefault();
-                      toastr.error("Please select a subcategory");
-                      return false;
-                    }
-                    if (!brands) {
-                      e.preventDefault();
-                      toastr.error("Please select a brand");
-                      return false;
-                    }
-                    if (!mrp_price || mrp_price <= 0) {
-                      e.preventDefault();
-                      toastr.error("Please enter valid MRP price");
-                      return false;
-                    }
-                    if (!dis_price || dis_price <= 0) {
-                      e.preventDefault();
-                      toastr.error("Please enter valid discounted price");
-                      return false;
-                    }
-                    if (!length || length <= 0) {
-                      e.preventDefault();
-                      toastr.error("Please enter valid length");
-                      return false;
-                    }
-                    if (!breadth || breadth <= 0) {
-                      e.preventDefault();
-                      toastr.error("Please enter valid breadth");
-                      return false;
-                    }
-                    if (!height || height <= 0) {
-                      e.preventDefault();
-                      toastr.error("Please enter valid height");
-                      return false;
-                    }
-                    if (!weight || weight <= 0) {
-                      e.preventDefault();
-                      toastr.error("Please enter valid weight");
-                      return false;
-                    }
-                    if (!desc) {
-                      e.preventDefault();
-                      toastr.error("Please enter product description");
-                      return false;
-                    }
-
-                    // Update textarea with CKEditor content before form submission
-                    if (editorInstance) {
+                    // Get CKEditor instance
+                    if (window.editorInstance) {
+                      // Get content from CKEditor
+                      const editorContent = window.editorInstance.getData();
+                      // Put it in the textarea
                       document.querySelector('textarea[name="desc"]').value =
-                        editorInstance.getData();
+                        editorContent;
                     }
+                    // Allow form to submit normally
                   });
               </script>
             </div>

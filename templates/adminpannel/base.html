@@ -23,13 +23,26 @@
     {% block body %} {% endblock body %}
 
     <script>
-      // Only initialize CKEditor if element exists and hasn't been initialized yet
-      const editorElement = document.querySelector("#editor");
-      if (editorElement && !editorElement.ckEditor) {
-        ClassicEditor.create(editorElement).catch((error) => {
-          console.error("CKEditor initialization error:", error);
-        });
-      }
+      // Initialize CKEditor after page load
+      document.addEventListener("DOMContentLoaded", function () {
+        const editorElement = document.querySelector("#editor");
+        if (editorElement) {
+          ClassicEditor.create(editorElement)
+            .then((editor) => {
+              // If there's a value in the textarea (from template), set it
+              const initialValue =
+                editorElement.value || editorElement.textContent;
+              if (initialValue) {
+                editor.setData(initialValue);
+              }
+              // Store instance for form submission
+              window.editorInstance = editor;
+            })
+            .catch((error) => {
+              console.error("CKEditor initialization error:", error);
+            });
+        }
+      });
     </script>
     <!-- Common JS -->
     <script src="/static/assetss/plugins/common/common.min.js"></script>
