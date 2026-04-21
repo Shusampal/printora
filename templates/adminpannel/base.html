@@ -23,26 +23,40 @@
     {% block body %} {% endblock body %}
 
     <script>
+      let editorInstance = null;
+      
       // Initialize CKEditor after page load
       document.addEventListener("DOMContentLoaded", function () {
         const editorElement = document.querySelector("#editor");
         if (editorElement) {
           ClassicEditor.create(editorElement)
             .then((editor) => {
+              editorInstance = editor;
+              // Store instance for global access
+              window.editorInstance = editor;
+              
               // If there's a value in the textarea (from template), set it
               const initialValue =
                 editorElement.value || editorElement.textContent;
               if (initialValue) {
                 editor.setData(initialValue);
               }
-              // Store instance for form submission
-              window.editorInstance = editor;
             })
             .catch((error) => {
               console.error("CKEditor initialization error:", error);
             });
         }
       });
+      
+      // Function to capture editor content before form submission
+      function captureEditorContent(event) {
+        if (window.editorInstance) {
+          const content = window.editorInstance.getData();
+          document.querySelector('textarea[name="desc"]').value = content;
+        }
+        return true;
+      }
+    </script>
     </script>
     <!-- Common JS -->
     <script src="/static/assetss/plugins/common/common.min.js"></script>

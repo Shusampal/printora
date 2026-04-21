@@ -15,7 +15,11 @@
             <div class="card-body">
               <div class="text-center">Update Product</div>
               <hr />
-              <form action="" method="post" id="editProductForm">
+              <form
+                action=""
+                method="post"
+                onsubmit="captureEditorContent(event)"
+              >
                 {% csrf_token %}
                 <div>
                   <label for="">Product Title</label>
@@ -123,10 +127,6 @@
                   ></textarea>
                 </div>
                 <hr />
-                <script>
-                  document.getElementById("editor").value =
-                    "{{product.product_description|safe}}";
-                </script>
                 <div
                   class="d-flex justify-content-center align-item-center w-100 my-1"
                 >
@@ -135,22 +135,6 @@
                   </button>
                 </div>
               </form>
-              <script>
-                // Handle form submission and capture CKEditor content
-                document
-                  .getElementById("editProductForm")
-                  .addEventListener("submit", function (e) {
-                    // Get CKEditor instance
-                    if (window.editorInstance) {
-                      // Get content from CKEditor
-                      const editorContent = window.editorInstance.getData();
-                      // Put it in the textarea
-                      document.querySelector('textarea[name="desc"]').value =
-                        editorContent;
-                    }
-                    // Allow form to submit normally
-                  });
-              </script>
             </div>
           </div>
         </div>
