@@ -313,7 +313,11 @@
           <div class="product-review-form mt-5">
             <span class="title">Add a review</span>
             {% if user.is_authenticated %}
-            <form action="" method="post" class="row g-3">
+            <form
+              action="{% url 'product_detail' product.slug %}"
+              method="post"
+              class="row g-3"
+            >
               {% csrf_token %}
               <div class="col-12">
                 <label for="rating" class="form-label">Rating</label>

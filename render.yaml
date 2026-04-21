@@ -1,0 +1,14 @@
+services:
+  - type: web
+    name: printora
+    env: python
+    buildCommand: "pip install -r requirements.txt && python manage.py collectstatic --noinput && python manage.py migrate"
+    startCommand: "gunicorn printora.wsgi"
+    envVars:
+      - key: DEBUG
+        value: "False"
+
+  - type: pserv
+    name: printora-db
+    plan: free
+    ipAllowList: []

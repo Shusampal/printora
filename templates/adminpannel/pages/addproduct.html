@@ -286,24 +286,36 @@
                     const brands = document.querySelector(
                       'select[name="brands"]',
                     ).value;
-                    const mrp_price = document
-                      .querySelector('input[name="mrp_price"]')
-                      .value.trim();
-                    const dis_price = document
-                      .querySelector('input[name="dis_price"]')
-                      .value.trim();
-                    const length = document
-                      .querySelector('input[name="length"]')
-                      .value.trim();
-                    const breadth = document
-                      .querySelector('input[name="breadth"]')
-                      .value.trim();
-                    const height = document
-                      .querySelector('input[name="height"]')
-                      .value.trim();
-                    const weight = document
-                      .querySelector('input[name="weight"]')
-                      .value.trim();
+                    const mrp_price = parseFloat(
+                      document
+                        .querySelector('input[name="mrp_price"]')
+                        .value.trim(),
+                    );
+                    const dis_price = parseFloat(
+                      document
+                        .querySelector('input[name="dis_price"]')
+                        .value.trim(),
+                    );
+                    const length = parseFloat(
+                      document
+                        .querySelector('input[name="length"]')
+                        .value.trim(),
+                    );
+                    const breadth = parseFloat(
+                      document
+                        .querySelector('input[name="breadth"]')
+                        .value.trim(),
+                    );
+                    const height = parseFloat(
+                      document
+                        .querySelector('input[name="height"]')
+                        .value.trim(),
+                    );
+                    const weight = parseFloat(
+                      document
+                        .querySelector('input[name="weight"]')
+                        .value.trim(),
+                    );
                     const desc = document
                       .querySelector('textarea[name="desc"]')
                       .value.trim();
