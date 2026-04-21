@@ -888,16 +888,16 @@ def addproduct(request):
 
             print("ALL BODY ______________________________")
 
-            print(title)
-            print(subcategory)
-            print(brands)
-            print(mrp_price_str)
-            print(dis_price_str)
-            print(desc)
-            print(length_str)
-            print(breadth_str)
-            print(height_str)
-            print(weight_str)
+            print(title, type(title))
+            print(subcategory, type(subcategory))
+            print(brands, type(brands))
+            print(mrp_price_str, type(mrp_price_str))
+            print(dis_price_str, type(dis_price_str))
+            print(desc, type(desc))
+            print(length_str, type(length_str))
+            print(breadth_str, type(breadth_str))
+            print(height_str, type(height_str))
+            print(weight_str, type(weight_str))
 
             # Validation
             if not title:
@@ -932,6 +932,8 @@ def addproduct(request):
                 height = int(float(height_str))
                 weight = float(weight_str)
 
+                print("*************************** HERE *********************** ")
+
                 product = Product(
                     product_name=title,
                     sub_category=SubCategory.objects.get(uid=subcategory),
@@ -947,6 +949,10 @@ def addproduct(request):
                 )
                 product.save()
                 messages.success(request, 'Product added successfully')
+
+                print("*************************** HERE *********************** ")
+
+                print(product.uid)
                 return redirect('editproduct', product.uid)
         except SubCategory.DoesNotExist:
             messages.error(request, 'Selected subcategory does not exist')
