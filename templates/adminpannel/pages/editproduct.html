@@ -1,155 +1,314 @@
-{% extends 'adminpannel/base.html' %}
-
-{% block body %}
-{% include 'adminpannel/loader.html' %}
+{% extends 'adminpannel/base.html' %} {% block body %} {% include
+'adminpannel/loader.html' %}
 <div id="main-wrapper">
-    <!-- header -->
-    {% include 'adminpannel/header.html' %}
-    <!-- #/ header -->
-    <!-- sidebar -->
-    {% include 'adminpannel/sidebar.html' %}
-    <!-- #/ sidebar -->
-    <div class="content-body">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-6 col-xl-6">
-                    <div class="card">
-                        <div class="card-body">
-                            <div class="text-center">
-                                Update Product
-                            </div>
-                            <hr>
-                            <form action="" method="post">
-                                {% csrf_token %}
-                                <div>
-                                    <label for="">Product Title</label>
-                                    <input type="text" class="form-control" name="title" value="{{product.product_name}}">
-                                </div>
-                                <hr>
-                                <div class="row">
-                                    
-                                    <div class="px-2 col-md-6">
-                                        <label for="">Select Sub Category</label>
-                                        <select name="subcategory" id="" class="form-control">
-                                            <option value="{{product.sub_category.uid}}">{{product.sub_category.category_name}}</option>
-                                            {% for c in sub_category %}
-                                            <option value="{{c.uid}}">{{c.category_name}}</option>
-                                            {% endfor %}
-                                        </select>
-                                        <!-- <input type="text" class="form-control" name="subcategory"> -->
-                                    </div>
-                                    <div class="px-2 col-md-6">
-                                        <label for="">Select Brands</label>
-                                        <select name="brands" id="" class="form-control">
-                                            <option value="{{product.brands.uid}}">{{product.brands.brands_name}}</option>
-                                            {% for c in brands %}
-                                            <option value="{{c.uid}}">{{c.brands_name}}</option>
-                                            {% endfor %}
-                                        </select>
-                                        <!-- <input type="text" class="form-control" name="subcategory"> -->
-                                    </div>
-                                    <div class="px-2 col-md-6">
-                                        <label for="">Mrp Price</label>
-                                        <input type="text" class="form-control" name="mrp_price" value="{{product.mrp_price}}">
-                                    </div>
-                                    <div class="px-2 col-md-6">
-                                        <label for="">Discounted Price</label>
-                                        <input type="text" class="form-control" name="dis_price" value="{{product.dis_price}}">
-                                    </div>
-                                    
-                                </div>
-                                <hr>
-                                <div class="row">
-                                    <div class="mx-2 col-md-2">
-                                        <label for="">Length (cm)</label>
-                                        <input type="text" value="{{product.length}}" class="form-control" name="length">
-                                    </div>
-                                    <div class="mx-2 col-md-2">
-                                        <label for="">Breadth (cm)</label>
-                                        <input type="text" value="{{product.breadth}}" class="form-control" name="breadth">
-                                    </div>
-                                    <div class="mx-2 col-md-2">
-                                        <label for="">Height (cm)</label>
-                                        <input type="text" value="{{product.height}}" class="form-control" name="height">
-                                    </div>
-                                    <div class="mx-2 col-md-3">
-                                        <label for="">Weight (gram)</label>
-                                        <input type="text" value="{{product.weight}}" class="form-control" name="weight">
-                                    </div>
-                                </div>
-                                <hr>
+  <!-- header -->
+  {% include 'adminpannel/header.html' %}
+  <!-- #/ header -->
+  <!-- sidebar -->
+  {% include 'adminpannel/sidebar.html' %}
+  <!-- #/ sidebar -->
+  <div class="content-body">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-6 col-xl-6">
+          <div class="card">
+            <div class="card-body">
+              <div class="text-center">Update Product</div>
+              <hr />
+              <form action="" method="post" id="editProductForm">
+                {% csrf_token %}
+                <div>
+                  <label for="">Product Title</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    name="title"
+                    value="{{product.product_name}}"
+                  />
+                </div>
+                <hr />
+                <div class="row">
+                  <div class="px-2 col-md-6">
+                    <label for="">Select Sub Category</label>
+                    <select name="subcategory" id="" class="form-control">
+                      <option value="{{product.sub_category.uid}}">
+                        {{product.sub_category.category_name}}
+                      </option>
+                      {% for c in sub_category %}
+                      <option value="{{c.uid}}">{{c.category_name}}</option>
+                      {% endfor %}
+                    </select>
+                    <!-- <input type="text" class="form-control" name="subcategory"> -->
+                  </div>
+                  <div class="px-2 col-md-6">
+                    <label for="">Select Brands</label>
+                    <select name="brands" id="" class="form-control">
+                      <option value="{{product.brands.uid}}">
+                        {{product.brands.brands_name}}
+                      </option>
+                      {% for c in brands %}
+                      <option value="{{c.uid}}">{{c.brands_name}}</option>
+                      {% endfor %}
+                    </select>
+                    <!-- <input type="text" class="form-control" name="subcategory"> -->
+                  </div>
+                  <div class="px-2 col-md-6">
+                    <label for="">Mrp Price</label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      name="mrp_price"
+                      value="{{product.mrp_price}}"
+                    />
+                  </div>
+                  <div class="px-2 col-md-6">
+                    <label for="">Discounted Price</label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      name="dis_price"
+                      value="{{product.dis_price}}"
+                    />
+                  </div>
+                </div>
+                <hr />
+                <div class="row">
+                  <div class="mx-2 col-md-2">
+                    <label for="">Length (cm)</label>
+                    <input
+                      type="text"
+                      value="{{product.length}}"
+                      class="form-control"
+                      name="length"
+                    />
+                  </div>
+                  <div class="mx-2 col-md-2">
+                    <label for="">Breadth (cm)</label>
+                    <input
+                      type="text"
+                      value="{{product.breadth}}"
+                      class="form-control"
+                      name="breadth"
+                    />
+                  </div>
+                  <div class="mx-2 col-md-2">
+                    <label for="">Height (cm)</label>
+                    <input
+                      type="text"
+                      value="{{product.height}}"
+                      class="form-control"
+                      name="height"
+                    />
+                  </div>
+                  <div class="mx-2 col-md-3">
+                    <label for="">Weight (gram)</label>
+                    <input
+                      type="text"
+                      value="{{product.weight}}"
+                      class="form-control"
+                      name="weight"
+                    />
+                  </div>
+                </div>
+                <hr />
 
-            
-                                <div>
-                                    <label for="">Descriptions</label>
-                                    <textarea class="w-100" name="desc" id="editor" cols="30" rows="5"></textarea>
-                                </div>
-                                <hr>  
-                                <script>
-                                    document.getElementById('editor').value = "{{product.product_description|safe}}"
-                                </script>
-                                <div class="d-flex justify-content-center align-item-center w-100 my-1">
-                                    <button type="submit" class="btn btn-dark mb-2">Submit</button>
-                                </div>
-                            </form>
-                        </div>
+                <div>
+                  <label for="">Descriptions</label>
+                  <textarea
+                    class="w-100"
+                    name="desc"
+                    id="editor"
+                    cols="30"
+                    rows="5"
+                  ></textarea>
+                </div>
+                <hr />
+                <script>
+                  let editorInstance = null;
+
+                  // Initialize CKEditor and set content
+                  ClassicEditor.create(document.querySelector("#editor"))
+                    .then((editor) => {
+                      editorInstance = editor;
+                      // Set the initial content from Django template
+                      editor.setData("{{product.product_description|safe}}");
+                    })
+                    .catch((error) => {
+                      console.error("CKEditor initialization error:", error);
+                    });
+
+                  // Form validation
+                  document
+                    .getElementById("editProductForm")
+                    .addEventListener("submit", function (e) {
+                      const title = document
+                        .querySelector('input[name="title"]')
+                        .value.trim();
+                      const subcategory = document.querySelector(
+                        'select[name="subcategory"]',
+                      ).value;
+                      const brands = document.querySelector(
+                        'select[name="brands"]',
+                      ).value;
+                      const mrp_price = document
+                        .querySelector('input[name="mrp_price"]')
+                        .value.trim();
+                      const dis_price = document
+                        .querySelector('input[name="dis_price"]')
+                        .value.trim();
+                      const length = document
+                        .querySelector('input[name="length"]')
+                        .value.trim();
+                      const breadth = document
+                        .querySelector('input[name="breadth"]')
+                        .value.trim();
+                      const height = document
+                        .querySelector('input[name="height"]')
+                        .value.trim();
+                      const weight = document
+                        .querySelector('input[name="weight"]')
+                        .value.trim();
+
+                      // Get description from CKEditor instance
+                      let desc = "";
+                      if (editorInstance) {
+                        desc = editorInstance.getData().trim();
+                      } else {
+                        desc = document
+                          .querySelector('textarea[name="desc"]')
+                          .value.trim();
+                      }
+
+                      // Validate fields
+                      if (!title) {
+                        e.preventDefault();
+                        toastr.error("Please enter product title");
+                        return false;
+                      }
+                      if (!subcategory) {
+                        e.preventDefault();
+                        toastr.error("Please select a subcategory");
+                        return false;
+                      }
+                      if (!brands) {
+                        e.preventDefault();
+                        toastr.error("Please select a brand");
+                        return false;
+                      }
+                      if (!mrp_price || parseFloat(mrp_price) <= 0) {
+                        e.preventDefault();
+                        toastr.error("Please enter valid MRP price");
+                        return false;
+                      }
+                      if (!dis_price || parseFloat(dis_price) <= 0) {
+                        e.preventDefault();
+                        toastr.error("Please enter valid discounted price");
+                        return false;
+                      }
+                      if (!length || parseFloat(length) <= 0) {
+                        e.preventDefault();
+                        toastr.error("Please enter valid length");
+                        return false;
+                      }
+                      if (!breadth || parseFloat(breadth) <= 0) {
+                        e.preventDefault();
+                        toastr.error("Please enter valid breadth");
+                        return false;
+                      }
+                      if (!height || parseFloat(height) <= 0) {
+                        e.preventDefault();
+                        toastr.error("Please enter valid height");
+                        return false;
+                      }
+                      if (!weight || parseFloat(weight) <= 0) {
+                        e.preventDefault();
+                        toastr.error("Please enter valid weight");
+                        return false;
+                      }
+                      if (!desc) {
+                        e.preventDefault();
+                        toastr.error("Please enter product description");
+                        return false;
+                      }
+
+                      // Update textarea with CKEditor content before form submission
+                      if (editorInstance) {
+                        document.querySelector('textarea[name="desc"]').value =
+                          editorInstance.getData();
+                      }
+                    });
+                </script>
+                <div
+                  class="d-flex justify-content-center align-item-center w-100 my-1"
+                >
+                  <button type="submit" class="btn btn-dark mb-2">
+                    Submit
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-lg-6 col-xl-6">
+          <div class="card">
+            <div class="card-body">
+              <div class="card-body">
+                <div class="d-flex justify-content-around align-items-center">
+                  <div>Add Images</div>
+                  <div>Size of Images: 570 x 760</div>
+                </div>
+                <hr />
+                <form
+                  action="{% url 'addproductimage' product.uid %}"
+                  method="post"
+                  enctype="multipart/form-data"
+                >
+                  {% csrf_token %}
+                  <div class="d-flex align-items-end">
+                    <div class="mx-2">
+                      <input type="file" class="form-control" name="image" />
                     </div>
+                    <div class="d-flex align-items-end mx-2">
+                      <button
+                        style="height: 40px"
+                        type="submit"
+                        class="btn btn-dark"
+                      >
+                        Submit
+                      </button>
+                    </div>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
 
+          <div class="card">
+            <div class="card-body">
+              <div class="row">
+                {% for p in product.product_images.all %}
+                <div class="col-md-6 p-2">
+                  <img style="width: 100%" src="{{p.image.url}}" alt="" />
+
+                  <div class="text-center my-2">
+                    <a
+                      href="{% url 'delproductimage' p.uid %}"
+                      class="btn btn-danger"
+                      >Delete</a
+                    >
+                  </div>
                 </div>
 
-                <div class="col-lg-6 col-xl-6">
-                    <div class="card">
-                        <div class="card-body">
-                            <div class="card-body">
-                                <div class="d-flex justify-content-around align-items-center">
-                                    <div>
-                                        Add Images
-                                    </div>
-                                    <div>
-                                        Size of Images: 570 x 760
-                                    </div>
-                                </div>
-                                <hr>
-                                <form action="{% url 'addproductimage' product.uid %}"  method="post" enctype="multipart/form-data">
-                                    {% csrf_token %}
-                                    <div class=" d-flex  align-items-end">     
-                                        <div class="mx-2">
-                                            <input type="file" class="form-control" name="image">
-                                        </div>
-                                        <div class="d-flex align-items-end mx-2">                        
-                                            <button style="height: 40px;" type="submit" class="btn btn-dark">Submit</button>
-                                        </div>
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="card">
-                        <div class="card-body">
-                            <div class="row">
-                                {% for p in product.product_images.all %}
-                                <div class="col-md-6 p-2">
-                                    <img style="width: 100%;" src="{{p.image.url}}" alt="">
-
-                                    <div class="text-center my-2">
-                                        <a href="{% url 'delproductimage' p.uid %}" class="btn btn-danger">Delete</a>
-                                    </div>
-                                </div>
-                                
-                                {% endfor %}
-                            </div>
-                        </div>
-                    </div>
-                </div> 
+                {% endfor %}
+              </div>
             </div>
+          </div>
         </div>
+      </div>
     </div>
+  </div>
 
-    {% include 'adminpannel/copywrite.html' %}
+  {% include 'adminpannel/copywrite.html' %}
 </div>
 {% endblock body %}
-
-
-
-

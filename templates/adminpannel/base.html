@@ -23,9 +23,13 @@
     {% block body %} {% endblock body %}
 
     <script>
-      ClassicEditor.create(document.querySelector("#editor")).catch((error) => {
-        console.error(error);
-      });
+      // Only initialize CKEditor if element exists and hasn't been initialized yet
+      const editorElement = document.querySelector("#editor");
+      if (editorElement && !editorElement.ckEditor) {
+        ClassicEditor.create(editorElement).catch((error) => {
+          console.error("CKEditor initialization error:", error);
+        });
+      }
     </script>
     <!-- Common JS -->
     <script src="/static/assetss/plugins/common/common.min.js"></script>

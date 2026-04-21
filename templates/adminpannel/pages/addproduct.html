@@ -274,6 +274,20 @@
                 </div>
               </form>
               <script>
+                let editorInstance = null;
+
+                // Initialize CKEditor and store the instance
+                if (document.querySelector("#editor")) {
+                  ClassicEditor.create(document.querySelector("#editor"))
+                    .then((editor) => {
+                      editorInstance = editor;
+                    })
+                    .catch((error) => {
+                      console.error(error);
+                    });
+                }
+
+                // Form validation
                 document
                   .getElementById("productForm")
                   .addEventListener("submit", function (e) {
@@ -316,9 +330,16 @@
                         .querySelector('input[name="weight"]')
                         .value.trim(),
                     );
-                    const desc = document
-                      .querySelector('textarea[name="desc"]')
-                      .value.trim();
+
+                    // Get description from CKEditor instance
+                    let desc = "";
+                    if (editorInstance) {
+                      desc = editorInstance.getData().trim();
+                    } else {
+                      desc = document
+                        .querySelector('textarea[name="desc"]')
+                        .value.trim();
+                    }
 
                     if (!title) {
                       e.preventDefault();
@@ -369,6 +390,12 @@
                       e.preventDefault();
                       toastr.error("Please enter product description");
                       return false;
+                    }
+
+                    // Update textarea with CKEditor content before form submission
+                    if (editorInstance) {
+                      document.querySelector('textarea[name="desc"]').value =
+                        editorInstance.getData();
                     }
                   });
               </script>
