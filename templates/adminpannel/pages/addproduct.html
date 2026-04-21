@@ -173,20 +173,8 @@
               </form>
 
               <script>
-                function captureEditorContent(event) {
-                  // Check if CKEditor instance exists
-                  if (window.editorInstance) {
-                    // Get content from CKEditor
-                    const content = window.editorInstance.getData().trim();
-
-                    // Put it in the textarea
-                    document.querySelector('textarea[name="desc"]').value =
-                      content;
-                  }
-
-                  // Form will submit normally
-                  return true;
-                }
+                // Form submission is handled by captureEditorContent() in base.html
+                // which logs all form data to console before sending
               </script>
             </div>
           </div>
