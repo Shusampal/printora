@@ -1,131 +1,29 @@
-{% extends 'adminpannel/base.html' %} {% block body %} {% include
-'adminpannel/loader.html' %}
+{% extends 'adminpannel/base.html' %} {% load static %} {% block body %} {%
+include 'adminpannel/loader.html' %}
+
 <div id="main-wrapper">
-  <!-- header -->
-  {% include 'adminpannel/header.html' %}
-  <!-- #/ header -->
-  <!-- sidebar -->
-  {% include 'adminpannel/sidebar.html' %}
-  <!-- #/ sidebar -->
+  {% include 'adminpannel/header.html' %} {% include 'adminpannel/sidebar.html'
+  %}
+
   <div class="content-body">
     <div class="container">
       <div class="row">
-        <!-- <div class="col-lg-6 col-xl-6">
-                    <div class="card">
-                        <div class="card-body">
-                            <div class="active-member">
-                                <div class="table-responsive">
-                                    <table class="table table-xs">
-                                        <thead>
-                                            <tr>
-                                                <th>Top Active Members</th>
-                                                <th>Views</th>
-                                                <th>Country</th>
-                                                <th>Status</th>
-                                                <th>Comments</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr>
-                                                <td>
-                                                    <img src="/static/assets/images/avatar/1.jpg"
-                                                        class="w-40px rounded-circle m-r-10" alt="">Arden Karn
-                                                </td>
-                                                <td><span>125</span>
-                                                </td>
-                                                <td>United States</td>
-                                                <td><i class="fa fa-circle-o text-success f-s-12 m-r-10"></i> Active
-                                                </td>
-                                                <td><span>84</span>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td>
-                                                    <img src="/static/assets/images/avatar/2.jpg"
-                                                        class="w-40px rounded-circle m-r-10" alt="">Arden Karn
-                                                </td>
-                                                <td><span>547</span>
-                                                </td>
-                                                <td>Canada</td>
-                                                <td><i class="fa fa-circle-o text-success f-s-12 m-r-10"></i> Active
-                                                </td>
-                                                <td><span>36</span>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td>
-                                                    <img src="/static/assets/images/avatar/3.jpg"
-                                                        class="w-40px rounded-circle m-r-10" alt="">Arden Karn
-                                                </td>
-                                                <td><span>557</span>
-                                                </td>
-                                                <td>Germany</td>
-                                                <td><i class="fa fa-circle-o text-danger f-s-12 m-r-10"></i> Inactive
-                                                </td>
-                                                <td><span>55</span>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td>
-                                                    <img src="/static/assets/images/avatar/4.jpg"
-                                                        class="w-40px rounded-circle m-r-10" alt="">Arden Karn
-                                                </td>
-                                                <td><span>753</span>
-                                                </td>
-                                                <td>England</td>
-                                                <td><i class="fa fa-circle-o text-success f-s-12 m-r-10"></i> Active
-                                                </td>
-                                                <td><span>45</span>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td>
-                                                    <img src="/static/assets/images/avatar/5.jpg"
-                                                        class="w-40px rounded-circle m-r-10" alt="">Arden Karn
-                                                </td>
-                                                <td><span>453</span>
-                                                </td>
-                                                <td>China</td>
-                                                <td><i class="fa fa-circle-o text-danger f-s-12 m-r-10"></i> Inactive
-                                                </td>
-                                                <td><span>63</span>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td>
-                                                    <img src="/static/assets/images/avatar/6.jpg"
-                                                        class="w-40px rounded-circle m-r-10" alt="">Arden Karn
-                                                </td>
-                                                <td><span>658</span>
-                                                </td>
-                                                <td>Japan</td>
-                                                <td><i class="fa fa-circle-o text-success f-s-12 m-r-10"></i> Active
-                                                </td>
-                                                <td><span>38</span>
-                                                </td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div> -->
         <div class="col-lg-12 col-xl-12">
           <div class="card">
             <div class="card-body">
-              <div class="text-center">Add Product</div>
+              <div class="text-center"><h4>Add Product</h4></div>
               <hr />
+
               <form
                 action="{% url 'addproduct' %}"
-                method="post"
+                method="POST"
                 id="productForm"
               >
                 {% csrf_token %}
+
+                <!-- Product Title -->
                 <div>
-                  <label for=""
-                    >Product Title <span class="text-danger">*</span></label
-                  >
+                  <label>Product Title *</label>
                   <input
                     type="text"
                     class="form-control"
@@ -133,171 +31,117 @@
                     required
                   />
                 </div>
+
                 <hr />
+
+                <!-- Category + Brand + Price -->
                 <div class="row">
-                  <div class="mx-2">
-                    <label for=""
-                      >Select Sub Category
-                      <span class="text-danger">*</span></label
-                    >
-                    <select
-                      name="subcategory"
-                      id=""
-                      class="form-control"
-                      required
-                    >
+                  <div class="col-md-3">
+                    <label>Sub Category *</label>
+                    <select name="subcategory" class="form-control" required>
                       <option value="">--select--</option>
                       {% for c in sub_category %}
                       <option value="{{c.uid}}">{{c.category_name}}</option>
                       {% endfor %}
                     </select>
-                    <!-- <input type="text" class="form-control" name="subcategory"> -->
                   </div>
-                  <div class="mx-2">
-                    <label for=""
-                      >Select Brands <span class="text-danger">*</span></label
-                    >
-                    <select name="brands" id="" class="form-control" required>
+
+                  <div class="col-md-3">
+                    <label>Brand *</label>
+                    <select name="brands" class="form-control" required>
                       <option value="">--select--</option>
                       {% for c in brands %}
                       <option value="{{c.uid}}">{{c.brands_name}}</option>
                       {% endfor %}
                     </select>
-                    <!-- <input type="text" class="form-control" name="subcategory"> -->
                   </div>
-                  <div class="mx-2">
-                    <label for=""
-                      >Mrp Price <span class="text-danger">*</span></label
-                    >
+
+                  <div class="col-md-3">
+                    <label>MRP Price *</label>
                     <input
                       type="number"
-                      class="form-control"
                       name="mrp_price"
-                      min="0"
-                      step="0.01"
+                      class="form-control"
                       required
                     />
                   </div>
-                  <div class="mx-2">
-                    <label for=""
-                      >Discounted Price
-                      <span class="text-danger">*</span></label
-                    >
+
+                  <div class="col-md-3">
+                    <label>Discounted Price *</label>
                     <input
                       type="number"
-                      class="form-control"
                       name="dis_price"
-                      min="0"
-                      step="0.01"
+                      class="form-control"
                       required
                     />
                   </div>
                 </div>
-                <hr />
-                <div class="row">
-                  <div class="mx-2">
-                    <label for=""
-                      >Length (cm) <span class="text-danger">*</span></label
-                    >
-                    <input
-                      type="number"
-                      class="form-control"
-                      name="length"
-                      min="0"
-                      step="0.01"
-                      required
-                    />
-                  </div>
-                  <div class="mx-2">
-                    <label for=""
-                      >Breadth (cm) <span class="text-danger">*</span></label
-                    >
-                    <input
-                      type="number"
-                      class="form-control"
-                      name="breadth"
-                      min="0"
-                      step="0.01"
-                      required
-                    />
-                  </div>
-                  <div class="mx-2">
-                    <label for=""
-                      >Height (cm) <span class="text-danger">*</span></label
-                    >
-                    <input
-                      type="number"
-                      class="form-control"
-                      name="height"
-                      min="0"
-                      step="0.01"
-                      required
-                    />
-                  </div>
-                  <div class="mx-2">
-                    <label for=""
-                      >Weight (gram) <span class="text-danger">*</span></label
-                    >
-                    <input
-                      type="number"
-                      class="form-control"
-                      name="weight"
-                      min="0"
-                      step="0.01"
-                      required
-                    />
-                  </div>
-                </div>
+
                 <hr />
 
+                <!-- Dimensions -->
+                <div class="row">
+                  <div class="col-md-3">
+                    <label>Length (cm) *</label>
+                    <input
+                      type="number"
+                      name="length"
+                      class="form-control"
+                      required
+                    />
+                  </div>
+
+                  <div class="col-md-3">
+                    <label>Breadth (cm) *</label>
+                    <input
+                      type="number"
+                      name="breadth"
+                      class="form-control"
+                      required
+                    />
+                  </div>
+
+                  <div class="col-md-3">
+                    <label>Height (cm) *</label>
+                    <input
+                      type="number"
+                      name="height"
+                      class="form-control"
+                      required
+                    />
+                  </div>
+
+                  <div class="col-md-3">
+                    <label>Weight (gram) *</label>
+                    <input
+                      type="number"
+                      name="weight"
+                      class="form-control"
+                      required
+                    />
+                  </div>
+                </div>
+
+                <hr />
+
+                <!-- Description -->
                 <div>
-                  <label for=""
-                    >Descriptions <span class="text-danger">*</span></label
-                  >
+                  <label>Description *</label>
                   <textarea
-                    class="w-100"
                     name="desc"
                     id="editor"
-                    cols="30"
+                    class="form-control"
                     rows="5"
+                    required
                   ></textarea>
                 </div>
+
                 <hr />
 
-                <div
-                  class="d-flex justify-content-center align-item-center w-100 my-1"
-                >
-                  <button type="submit" class="btn btn-dark mb-2">
-                    Submit
-                  </button>
+                <div class="text-center">
+                  <button type="submit" class="btn btn-dark">Submit</button>
                 </div>
               </form>
-              <script>
-                // Handle form submission and capture CKEditor content
-                document
-                  .getElementById("productForm")
-                  .addEventListener("submit", function (e) {
-                    // Get CKEditor instance
-                    if (window.editorInstance) {
-                      // Get content from CKEditor
-                      const editorContent = window.editorInstance
-                        .getData()
-                        .trim();
-
-                      // Validate editor content
-                      if (!editorContent) {
-                        e.preventDefault();
-                        toastr.error("Please enter product description");
-                        return false;
-                      }
-
-                      // Put content in textarea for submission
-                      document.querySelector('textarea[name="desc"]').value =
-                        editorContent;
-                    }
-                    // Allow form to submit normally
-                  });
-              </script>
             </div>
           </div>
         </div>
@@ -307,4 +151,27 @@
 
   {% include 'adminpannel/copywrite.html' %}
 </div>
-{% endblock body %}
+
+<!-- ✅ CKEditor (safe setup) -->
+<script src="https://cdn.ckeditor.com/4.22.1/standard/ckeditor.js"></script>
+
+<script>
+  // Initialize editor safely
+  let editorInstance = null;
+
+  if (document.getElementById("editor")) {
+    editorInstance = CKEDITOR.replace("editor");
+  }
+
+  // Safe form submit (NO crash)
+  document
+    .getElementById("productForm")
+    .addEventListener("submit", function () {
+      if (editorInstance) {
+        document.querySelector('textarea[name="desc"]').value =
+          editorInstance.getData();
+      }
+    });
+</script>
+
+{% endblock %}
