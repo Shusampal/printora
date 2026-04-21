@@ -260,7 +260,6 @@
                     id="editor"
                     cols="30"
                     rows="5"
-                    required
                   ></textarea>
                 </div>
                 <hr />
@@ -281,8 +280,18 @@
                     // Get CKEditor instance
                     if (window.editorInstance) {
                       // Get content from CKEditor
-                      const editorContent = window.editorInstance.getData();
-                      // Put it in the textarea
+                      const editorContent = window.editorInstance
+                        .getData()
+                        .trim();
+
+                      // Validate editor content
+                      if (!editorContent) {
+                        e.preventDefault();
+                        toastr.error("Please enter product description");
+                        return false;
+                      }
+
+                      // Put content in textarea for submission
                       document.querySelector('textarea[name="desc"]').value =
                         editorContent;
                     }
