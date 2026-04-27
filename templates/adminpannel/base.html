@@ -9,6 +9,7 @@
     <!-- Favicon icon -->
     <link rel="icon" type="image/png" sizes="16x16" href="{{company_logo}}" />
     <link href="/static/csss/style.css" rel="stylesheet" />
+    <link href="{% static 'css/admin-panel-custom.css' %}" rel="stylesheet" />
     <script src="/static/jss/modernizr-3.6.0.min.js"></script>
     <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}" />
     <!-- Toastr CSS -->
@@ -19,7 +20,7 @@
     <script src="https://cdn.ckeditor.com/ckeditor5/11.0.1/classic/ckeditor.js"></script>
   </head>
 
-  <body class="v-light vertical-nav fix-header fix-sidebar">
+  <body class="v-light vertical-nav fix-header fix-sidebar admin-modern">
     {% block body %} {% endblock body %}
 
     <script>

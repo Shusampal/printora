@@ -1,23 +1,32 @@
-{% extends 'adminpannel/base.html' %} {% block body %} {% include
-'adminpannel/loader.html' %}
+{% extends 'adminpannel/base.html' %}
+
+{% block body %}
+{% include 'adminpannel/loader.html' %}
 <div id="main-wrapper">
-  <!-- header -->
   {% include 'adminpannel/header.html' %}
-  <!-- #/ header -->
-  <!-- sidebar -->
   {% include 'adminpannel/sidebar.html' %}
-  <!-- #/ sidebar -->
   <div class="content-body">
-    <div class="container">
+    <div class="container page-shell">
+      <section class="page-hero">
+        <span class="page-hero__eyebrow">Catalog Setup</span>
+        <h2>Organize top-level categories with a cleaner publishing workflow.</h2>
+        <p>
+          Create and manage storefront category groups without changing any of
+          the existing backend behavior.
+        </p>
+      </section>
+
       <div class="row">
-        <div class="col-lg-12 col-xl-12">
-          <div class="card">
+        <div class="col-lg-5 col-xl-4">
+          <div class="card section-card">
             <div class="card-body">
-              <div class="d-flex justify-content-around align-items-center">
-                <div>Add Category</div>
-                <div>Size of Images: 440 x 234</div>
+              <div class="section-card__header">
+                <div>
+                  <h3>Add Category</h3>
+                  <p>Create a new catalog section.</p>
+                </div>
+                <div class="section-note">Image guide: 440 x 234</div>
               </div>
-              <hr />
               <form
                 action=""
                 method="post"
@@ -25,23 +34,20 @@
                 id="categoryForm"
               >
                 {% csrf_token %}
-                <div class="row d-flex align-items-end">
-                  <div class="mx-2">
-                    <label for=""
-                      >Category Title <span class="text-danger">*</span></label
-                    >
+                <div class="admin-form-grid">
+                  <div class="admin-field admin-field--span-12">
+                    <label for="">Category Title <span class="text-danger">*</span></label>
                     <input
                       type="text"
                       class="form-control"
                       name="title"
+                      placeholder="Example: Living Room Decor"
                       required
                     />
                   </div>
 
-                  <div class="mx-2">
-                    <label for=""
-                      >Image <span class="text-danger">*</span></label
-                    >
+                  <div class="admin-field admin-field--span-12">
+                    <label for="">Image <span class="text-danger">*</span></label>
                     <input
                       type="file"
                       class="form-control"
@@ -49,16 +55,12 @@
                       required
                       accept="image/*"
                     />
+                    <small>Upload the category thumbnail used across the admin and storefront.</small>
                   </div>
-                  <div class="d-flex align-items-end mx-2">
-                    <button
-                      style="height: 40px"
-                      type="submit"
-                      class="btn btn-dark"
-                    >
-                      Submit
-                    </button>
-                  </div>
+                </div>
+                <div class="admin-form-actions">
+                  <span class="admin-form-hint">Required fields stay exactly the same as before.</span>
+                  <button type="submit" class="btn btn-dark">Save Category</button>
                 </div>
               </form>
               <script>
@@ -86,67 +88,65 @@
               </script>
             </div>
           </div>
+        </div>
 
-          <div class="card">
+        <div class="col-lg-7 col-xl-8">
+          <div class="card table-card">
             <div class="card-body">
-              <div class="active-member">
-                <div class="table-responsive">
-                  <table class="table table-xs">
-                    <thead>
-                      <tr>
-                        <th>No</th>
-                        <th>Image</th>
-                        <th>Category Name</th>
-                        <th>Status</th>
-                        <th>Action</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {% for c in category %}
-                      <tr>
-                        <td><span>{{forloop.counter}}</span></td>
-
-                        <td>
-                          <img
-                            style="width: 50px"
-                            src="{{c.category_image.url}}"
-                            class="m-r-2"
-                            alt=""
-                          />
-                        </td>
-                        <td>{{c.category_name}}</td>
-                        <td>
-                          {% if c.is_publish %}
-                          <a
-                            href="{% url 'change_status' %}?type=category&uid={{c.uid}}"
-                            ><i
-                              class="fa fa-circle text-success f-s-12 m-r-10"
-                            ></i>
-                            Publish</a
-                          >
-                          {% else %}
-                          <a
-                            href="{% url 'change_status' %}?type=category&uid={{c.uid}}"
-                            ><i
-                              class="fa fa-circle-o text-danger f-s-12 m-r-10"
-                            ></i>
-                            Not Publish</a
-                          >
-                          {% endif %}
-                        </td>
-                        <td>
-                          <a
-                            class="btn btn-danger"
-                            href="{% url 'delcategory' c.uid %}"
-                          >
-                            <b>X</b></a
-                          >
-                        </td>
-                      </tr>
-                      {% endfor %}
-                    </tbody>
-                  </table>
+              <div class="table-card__header">
+                <div>
+                  <h3>Existing Categories</h3>
+                  <p>Quickly review, publish, or remove catalog groups.</p>
                 </div>
+                <div class="section-note">{{ category.count }} total</div>
+              </div>
+              <div class="table-responsive">
+                <table class="table table-xs">
+                  <thead>
+                    <tr>
+                      <th>No</th>
+                      <th>Image</th>
+                      <th>Category Name</th>
+                      <th>Status</th>
+                      <th>Action</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {% for c in category %}
+                    <tr>
+                      <td><span>{{forloop.counter}}</span></td>
+                      <td>
+                        <img
+                          src="{{c.category_image.url}}"
+                          class="table-thumb"
+                          alt=""
+                        />
+                      </td>
+                      <td>{{c.category_name}}</td>
+                      <td>
+                        {% if c.is_publish %}
+                        <a
+                          href="{% url 'change_status' %}?type=category&uid={{c.uid}}"
+                          class="status-pill status-pill--live"
+                          ><i class="fa fa-circle"></i> Publish</a
+                        >
+                        {% else %}
+                        <a
+                          href="{% url 'change_status' %}?type=category&uid={{c.uid}}"
+                          class="status-pill status-pill--muted"
+                          ><i class="fa fa-circle-o"></i> Not Publish</a
+                        >
+                        {% endif %}
+                      </td>
+                      <td>
+                        <div class="table-actions">
+                          <a class="btn btn-danger" href="{% url 'delcategory' c.uid %}">Remove</a>
+                        </div>
+                      </td>
+                    </tr>
+                    {% endfor %}
+                  </tbody>
+                </table>
               </div>
             </div>
           </div>

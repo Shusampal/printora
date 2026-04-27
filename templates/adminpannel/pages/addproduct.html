@@ -1,20 +1,32 @@
-{% extends 'adminpannel/base.html' %} {% block body %} {% include
-'adminpannel/loader.html' %}
+{% extends 'adminpannel/base.html' %}
+
+{% block body %}
+{% include 'adminpannel/loader.html' %}
 <div id="main-wrapper">
-  <!-- header -->
   {% include 'adminpannel/header.html' %}
-  <!-- #/ header -->
-  <!-- sidebar -->
   {% include 'adminpannel/sidebar.html' %}
-  <!-- #/ sidebar -->
   <div class="content-body">
-    <div class="container">
+    <div class="container page-shell">
+      <section class="page-hero">
+        <span class="page-hero__eyebrow">Product Setup</span>
+        <h2>Create new products in a calmer, more structured workspace.</h2>
+        <p>
+          All form fields, validation hooks, and redirects are unchanged. This
+          update only improves the editing experience.
+        </p>
+      </section>
+
       <div class="row">
         <div class="col-lg-12 col-xl-12">
-          <div class="card">
+          <div class="card section-card">
             <div class="card-body">
-              <div class="text-center">Add Product</div>
-              <hr />
+              <div class="section-card__header">
+                <div>
+                  <h3>Add Product</h3>
+                  <p>Fill in catalog, pricing, shipping, and description details.</p>
+                </div>
+                <div class="section-note">After save, you will still be redirected to image upload.</div>
+              </div>
               <form
                 action="{% url 'addproduct' %}"
                 method="post"
@@ -22,24 +34,19 @@
                 onsubmit="captureEditorContent(event)"
               >
                 {% csrf_token %}
-                <div>
-                  <label for=""
-                    >Product Title <span class="text-danger">*</span></label
-                  >
-                  <input
-                    type="text"
-                    class="form-control"
-                    name="title"
-                    required
-                  />
-                </div>
-                <hr />
-                <div class="row">
-                  <div class="mx-2">
-                    <label for=""
-                      >Select Sub Category
-                      <span class="text-danger">*</span></label
-                    >
+                <div class="admin-form-grid">
+                  <div class="admin-field admin-field--span-12">
+                    <label for="">Product Title <span class="text-danger">*</span></label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      name="title"
+                      placeholder="Example: Handcrafted Ceramic Vase"
+                      required
+                    />
+                  </div>
+                  <div class="admin-field admin-field--span-3">
+                    <label for="">Select Sub Category <span class="text-danger">*</span></label>
                     <select name="subcategory" class="form-control" required>
                       <option value="">--select--</option>
                       {% for c in sub_category %}
@@ -47,10 +54,8 @@
                       {% endfor %}
                     </select>
                   </div>
-                  <div class="mx-2">
-                    <label for=""
-                      >Select Brands <span class="text-danger">*</span></label
-                    >
+                  <div class="admin-field admin-field--span-3">
+                    <label for="">Select Brands <span class="text-danger">*</span></label>
                     <select name="brands" class="form-control" required>
                       <option value="">--select--</option>
                       {% for c in brands %}
@@ -58,10 +63,8 @@
                       {% endfor %}
                     </select>
                   </div>
-                  <div class="mx-2">
-                    <label for=""
-                      >Mrp Price <span class="text-danger">*</span></label
-                    >
+                  <div class="admin-field admin-field--span-3">
+                    <label for="">Mrp Price <span class="text-danger">*</span></label>
                     <input
                       type="number"
                       class="form-control"
@@ -72,11 +75,8 @@
                       required
                     />
                   </div>
-                  <div class="mx-2">
-                    <label for=""
-                      >Discounted Price
-                      <span class="text-danger">*</span></label
-                    >
+                  <div class="admin-field admin-field--span-3">
+                    <label for="">Discounted Price <span class="text-danger">*</span></label>
                     <input
                       type="number"
                       class="form-control"
@@ -87,13 +87,8 @@
                       required
                     />
                   </div>
-                </div>
-                <hr />
-                <div class="row">
-                  <div class="mx-2">
-                    <label for=""
-                      >Length (cm) <span class="text-danger">*</span></label
-                    >
+                  <div class="admin-field admin-field--span-3">
+                    <label for="">Length (cm) <span class="text-danger">*</span></label>
                     <input
                       type="number"
                       class="form-control"
@@ -104,10 +99,8 @@
                       required
                     />
                   </div>
-                  <div class="mx-2">
-                    <label for=""
-                      >Breadth (cm) <span class="text-danger">*</span></label
-                    >
+                  <div class="admin-field admin-field--span-3">
+                    <label for="">Breadth (cm) <span class="text-danger">*</span></label>
                     <input
                       type="number"
                       class="form-control"
@@ -118,10 +111,8 @@
                       required
                     />
                   </div>
-                  <div class="mx-2">
-                    <label for=""
-                      >Height (cm) <span class="text-danger">*</span></label
-                    >
+                  <div class="admin-field admin-field--span-3">
+                    <label for="">Height (cm) <span class="text-danger">*</span></label>
                     <input
                       type="number"
                       class="form-control"
@@ -132,10 +123,8 @@
                       required
                     />
                   </div>
-                  <div class="mx-2">
-                    <label for=""
-                      >Weight (gram) <span class="text-danger">*</span></label
-                    >
+                  <div class="admin-field admin-field--span-3">
+                    <label for="">Weight (gram) <span class="text-danger">*</span></label>
                     <input
                       type="number"
                       class="form-control"
@@ -146,29 +135,20 @@
                       required
                     />
                   </div>
+                  <div class="admin-field admin-field--span-12">
+                    <label for="">Descriptions <span class="text-danger">*</span></label>
+                    <textarea
+                      class="w-100 form-control"
+                      name="desc"
+                      id="editor"
+                      cols="30"
+                      rows="5"
+                    ></textarea>
+                  </div>
                 </div>
-                <hr />
-
-                <div>
-                  <label for=""
-                    >Descriptions <span class="text-danger">*</span></label
-                  >
-                  <textarea
-                    class="w-100"
-                    name="desc"
-                    id="editor"
-                    cols="30"
-                    rows="5"
-                  ></textarea>
-                </div>
-                <hr />
-
-                <div
-                  class="d-flex justify-content-center align-item-center w-100 my-1"
-                >
-                  <button type="submit" class="btn btn-dark mb-2">
-                    Submit
-                  </button>
+                <div class="admin-form-actions">
+                  <span class="admin-form-hint">Numeric rules and validation messages continue to come from the same view logic.</span>
+                  <button type="submit" class="btn btn-dark mb-2">Save and Continue</button>
                 </div>
               </form>
 

@@ -1,38 +1,48 @@
-{% extends 'adminpannel/base.html' %} {% block body %} {% include
-'adminpannel/loader.html' %}
+{% extends 'adminpannel/base.html' %}
+
+{% block body %}
+{% include 'adminpannel/loader.html' %}
 <div id="main-wrapper">
-  <!-- header -->
   {% include 'adminpannel/header.html' %}
-  <!-- #/ header -->
-  <!-- sidebar -->
   {% include 'adminpannel/sidebar.html' %}
-  <!-- #/ sidebar -->
   <div class="content-body">
-    <div class="container">
+    <div class="container page-shell">
+      <section class="page-hero">
+        <span class="page-hero__eyebrow">Product Maintenance</span>
+        <h2>Update product details and gallery assets from one polished editor.</h2>
+        <p>
+          The save, upload, and delete actions remain the same while the layout
+          becomes easier to manage day to day.
+        </p>
+      </section>
+
       <div class="row">
         <div class="col-lg-6 col-xl-6">
-          <div class="card">
+          <div class="card section-card">
             <div class="card-body">
-              <div class="text-center">Update Product</div>
-              <hr />
+              <div class="section-card__header">
+                <div>
+                  <h3>Update Product</h3>
+                  <p>Edit product information without changing the backend workflow.</p>
+                </div>
+              </div>
               <form
                 action=""
                 method="post"
                 onsubmit="captureEditorContent(event)"
               >
                 {% csrf_token %}
-                <div>
-                  <label for="">Product Title</label>
-                  <input
-                    type="text"
-                    class="form-control"
-                    name="title"
-                    value="{{product.product_name}}"
-                  />
-                </div>
-                <hr />
-                <div class="row">
-                  <div class="px-2 col-md-6">
+                <div class="admin-form-grid">
+                  <div class="admin-field admin-field--span-12">
+                    <label for="">Product Title</label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      name="title"
+                      value="{{product.product_name}}"
+                    />
+                  </div>
+                  <div class="admin-field admin-field--span-6">
                     <label for="">Select Sub Category</label>
                     <select name="subcategory" id="" class="form-control">
                       <option value="{{product.sub_category.uid}}">
@@ -42,9 +52,8 @@
                       <option value="{{c.uid}}">{{c.category_name}}</option>
                       {% endfor %}
                     </select>
-                    <!-- <input type="text" class="form-control" name="subcategory"> -->
                   </div>
-                  <div class="px-2 col-md-6">
+                  <div class="admin-field admin-field--span-6">
                     <label for="">Select Brands</label>
                     <select name="brands" id="" class="form-control">
                       <option value="{{product.brands.uid}}">
@@ -54,9 +63,8 @@
                       <option value="{{c.uid}}">{{c.brands_name}}</option>
                       {% endfor %}
                     </select>
-                    <!-- <input type="text" class="form-control" name="subcategory"> -->
                   </div>
-                  <div class="px-2 col-md-6">
+                  <div class="admin-field admin-field--span-6">
                     <label for="">Mrp Price</label>
                     <input
                       type="number"
@@ -68,7 +76,7 @@
                       required
                     />
                   </div>
-                  <div class="px-2 col-md-6">
+                  <div class="admin-field admin-field--span-6">
                     <label for="">Discounted Price</label>
                     <input
                       type="number"
@@ -80,10 +88,7 @@
                       required
                     />
                   </div>
-                </div>
-                <hr />
-                <div class="row">
-                  <div class="mx-2 col-md-2">
+                  <div class="admin-field admin-field--span-3">
                     <label for="">Length (cm)</label>
                     <input
                       type="number"
@@ -95,7 +100,7 @@
                       required
                     />
                   </div>
-                  <div class="mx-2 col-md-2">
+                  <div class="admin-field admin-field--span-3">
                     <label for="">Breadth (cm)</label>
                     <input
                       type="number"
@@ -107,7 +112,7 @@
                       required
                     />
                   </div>
-                  <div class="mx-2 col-md-2">
+                  <div class="admin-field admin-field--span-3">
                     <label for="">Height (cm)</label>
                     <input
                       type="number"
@@ -119,7 +124,7 @@
                       required
                     />
                   </div>
-                  <div class="mx-2 col-md-3">
+                  <div class="admin-field admin-field--span-3">
                     <label for="">Weight (gram)</label>
                     <input
                       type="number"
@@ -132,26 +137,20 @@
                       required
                     />
                   </div>
+                  <div class="admin-field admin-field--span-12">
+                    <label for="">Descriptions</label>
+                    <textarea
+                      class="w-100 form-control"
+                      name="desc"
+                      id="editor"
+                      cols="30"
+                      rows="5"
+                    >{{product.product_description}}</textarea>
+                  </div>
                 </div>
-                <hr />
-
-                <div>
-                  <label for="">Descriptions</label>
-                  <textarea
-                    class="w-100"
-                    name="desc"
-                    id="editor"
-                    cols="30"
-                    rows="5"
-                  ></textarea>
-                </div>
-                <hr />
-                <div
-                  class="d-flex justify-content-center align-item-center w-100 my-1"
-                >
-                  <button type="submit" class="btn btn-dark mb-2">
-                    Submit
-                  </button>
+                <div class="admin-form-actions">
+                  <span class="admin-form-hint">Existing product relationships and validation stay untouched.</span>
+                  <button type="submit" class="btn btn-dark mb-2">Update Product</button>
                 </div>
               </form>
             </div>
@@ -159,50 +158,48 @@
         </div>
 
         <div class="col-lg-6 col-xl-6">
-          <div class="card">
+          <div class="card section-card">
             <div class="card-body">
-              <div class="card-body">
-                <div class="d-flex justify-content-around align-items-center">
-                  <div>Add Images</div>
-                  <div>Size of Images: 570 x 760</div>
+              <div class="section-card__header">
+                <div>
+                  <h3>Gallery Images</h3>
+                  <p>Upload additional visuals for this product.</p>
                 </div>
-                <hr />
-                <form
-                  action="{% url 'addproductimage' product.uid %}"
-                  method="post"
-                  enctype="multipart/form-data"
-                >
-                  {% csrf_token %}
-                  <div class="d-flex align-items-end">
-                    <div class="mx-2">
-                      <input type="file" class="form-control" name="image" />
-                    </div>
-                    <div class="d-flex align-items-end mx-2">
-                      <button
-                        style="height: 40px"
-                        type="submit"
-                        class="btn btn-dark"
-                      >
-                        Submit
-                      </button>
-                    </div>
-                  </div>
-                </form>
+                <div class="section-note">Image guide: 570 x 760</div>
               </div>
+              <form
+                action="{% url 'addproductimage' product.uid %}"
+                method="post"
+                enctype="multipart/form-data"
+              >
+                {% csrf_token %}
+                <div class="admin-form-grid">
+                  <div class="admin-field admin-field--span-8">
+                    <input type="file" class="form-control" name="image" />
+                  </div>
+                  <div class="admin-field admin-field--span-4">
+                    <button type="submit" class="btn btn-dark">Upload Image</button>
+                  </div>
+                </div>
+              </form>
             </div>
           </div>
 
-          <div class="card">
+          <div class="card section-card">
             <div class="card-body">
-              <div class="row">
+              <div class="section-card__header">
+                <div>
+                  <h3>Current Gallery</h3>
+                  <p>Manage uploaded product images.</p>
+                </div>
+                <div class="section-note">{{ product.product_images.count }} images</div>
+              </div>
+              <div class="admin-image-grid">
                 {% for p in product.product_images.all %}
-                <div class="col-md-6 p-2">
-                  <img style="width: 100%" src="{{p.image.url}}" alt="" />
-
+                <div class="admin-image-card">
+                  <img src="{{p.image.url}}" alt="" />
                   <div class="text-center my-2">
-                    <a
-                      href="{% url 'delproductimage' p.uid %}"
-                      class="btn btn-danger"
+                    <a href="{% url 'delproductimage' p.uid %}" class="btn btn-danger"
                       >Delete</a
                     >
                   </div>

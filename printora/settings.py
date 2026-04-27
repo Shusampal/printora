@@ -35,6 +35,8 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 # Application definition
 
 INSTALLED_APPS = [
+    'admin_interface',
+    'colorfield',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -168,3 +170,16 @@ MESSAGE_TAGS = {
 # Increase POST data size limit to handle large descriptions
 DATA_UPLOAD_MAX_MEMORY_SIZE = 10 * 1024 * 1024  # 10MB
 FILE_UPLOAD_MAX_MEMORY_SIZE = 10 * 1024 * 1024  # 10MB
+
+# =====================
+# ADMIN INTERFACE THEME
+# =====================
+# Beautiful Admin Interface Configuration
+ADMIN_INTERFACE = {
+    'LOGO_PATH': '/media/categories/category.avif',  # Optional: set your logo path
+    'SHOW_THEME_COLORS': True,
+    'SHOW_FIELDSETS_IN_HORIZONTAL_LAYOUT': True,
+    'DEFAULT_THEME': 'theme-default',
+}
+
+# Customize Admin Site Title and Header

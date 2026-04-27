@@ -1,294 +1,203 @@
-{% extends 'adminpannel/base.html' %} {% block body %} {% include
-'adminpannel/loader.html' %}
+{% extends 'adminpannel/base.html' %}
+
+{% block body %}
+{% include 'adminpannel/loader.html' %}
 <div id="main-wrapper">
-  <!-- header -->
   {% include 'adminpannel/header.html' %}
-  <!-- #/ header -->
-  <!-- sidebar -->
   {% include 'adminpannel/sidebar.html' %}
-  <!-- #/ sidebar -->
-  <!-- content body -->
   <div class="content-body">
-    <div class="container">
-      <div class="row page-titles">
-        <div class="col p-0">
-          <h4>Hello, <span>Welcome here</span></h4>
+    <div class="container page-shell">
+      <section class="page-hero">
+        <span class="page-hero__eyebrow">Operations Overview</span>
+        <h1>Manage the store with a cleaner, faster control room.</h1>
+        <p>
+          Track order flow, monitor catalog growth, and jump into product
+          updates without leaving the dashboard.
+        </p>
+        <div class="page-hero__stats">
+          <div class="hero-chip">
+            <strong>{{ products.count }}</strong>
+            <span>Products in catalog</span>
+          </div>
+          <div class="hero-chip">
+            <strong>{{ pending_count }}</strong>
+            <span>Orders awaiting action</span>
+          </div>
+          <div class="hero-chip">
+            <strong>{{ contact_message.count }}</strong>
+            <span>Recent customer messages</span>
+          </div>
         </div>
-        <div class="col p-0">
-          <ol class="breadcrumb">
-            <li class="breadcrumb-item">
-              <a href="javascript:void(0)">Home</a>
-            </li>
-            <li class="breadcrumb-item active">Dashboard</li>
-          </ol>
-        </div>
-      </div>
+      </section>
+
       <div class="row">
         <div class="col-lg-3">
-          <div class="card lola-card">
-            <div class="card-body">
-              <h4>
-                Pending Order<span class="pull-right"
-                  ><i class="ion-android-download f-s-30 text-primary"></i
-                ></span>
-              </h4>
-              <h6 class="m-t-20 f-s-14">{{pending_count}}</h6>
-              <div class="progress m-t-0 h-7px lola-pro">
-                <div
-                  role="progressbar"
-                  class="progress-bar bg-primary wow animated progress-animated w-50pc h-7px"
-                ></div>
+          <div class="card dashboard-metric-card">
+            <div class="dashboard-metric-card__top">
+              <div>
+                <h4>Pending Orders</h4>
+                <div class="value">{{pending_count}}</div>
               </div>
+              <span class="icon-wrap"><i class="ion-android-download"></i></span>
             </div>
+            <div class="meta">
+              <span>Needs fulfillment review</span>
+              <span>Queue</span>
+            </div>
+            <div class="admin-progress"><span style="width: 52%"></span></div>
           </div>
         </div>
         <div class="col-lg-3">
-          <div class="card lola-card">
-            <div class="card-body">
-              <h4>
-                To Packed
-                <span class="pull-right"
-                  ><i class="ion-android-upload f-s-30 text-success"></i
-                ></span>
-              </h4>
-              <h6 class="m-t-20 f-s-14">{{packed_count}}</h6>
-              <div class="progress m-t-0 h-7px lola-pro">
-                <div
-                  role="progressbar"
-                  class="progress-bar bg-success wow animated progress-animated w-90pc h-7px"
-                ></div>
+          <div class="card dashboard-metric-card">
+            <div class="dashboard-metric-card__top">
+              <div>
+                <h4>Packed Orders</h4>
+                <div class="value">{{packed_count}}</div>
               </div>
+              <span class="icon-wrap"><i class="ion-android-upload"></i></span>
             </div>
-          </div>
-        </div>
-
-        <div class="col-lg-3">
-          <div class="card lola-card">
-            <div class="card-body">
-              <h4>
-                To be Shipped<span class="pull-right"
-                  ><i class="ion-android-list f-s-30 text-danger"></i
-                ></span>
-              </h4>
-              <h6 class="m-t-20 f-s-14">{{onway_count}}</h6>
-              <div class="progress m-t-0 h-7px lola-pro">
-                <div
-                  role="progressbar"
-                  class="progress-bar bg-danger wow animated progress-animated w-65pc h-7px"
-                ></div>
-              </div>
+            <div class="meta">
+              <span>Ready for dispatch</span>
+              <span>Warehouse</span>
             </div>
-          </div>
-        </div>
-
-        <div class="col-lg-3">
-          <div class="card lola-card">
-            <div class="card-body">
-              <h4>
-                Delivered<span class="pull-right"
-                  ><i class="ion-android-list f-s-30 text-danger"></i
-                ></span>
-              </h4>
-              <h6 class="m-t-20 f-s-14">{{delivered_count}}</h6>
-              <div class="progress m-t-0 h-7px lola-pro">
-                <div
-                  role="progressbar"
-                  class="progress-bar bg-danger wow animated progress-animated w-65pc h-7px"
-                ></div>
-              </div>
-            </div>
+            <div class="admin-progress"><span style="width: 74%"></span></div>
           </div>
         </div>
         <div class="col-lg-3">
-          <div class="card lola-card">
-            <div class="card-body">
-              <h4>
-                Canceled<span class="pull-right"
-                  ><i class="ion-android-list f-s-30 text-danger"></i
-                ></span>
-              </h4>
-              <h6 class="m-t-20 f-s-14">{{cancel_count}}</h6>
-              <div class="progress m-t-0 h-7px lola-pro">
-                <div
-                  role="progressbar"
-                  class="progress-bar bg-danger wow animated progress-animated w-65pc h-7px"
-                ></div>
+          <div class="card dashboard-metric-card">
+            <div class="dashboard-metric-card__top">
+              <div>
+                <h4>On The Way</h4>
+                <div class="value">{{onway_count}}</div>
               </div>
+              <span class="icon-wrap"><i class="ion-android-list"></i></span>
             </div>
+            <div class="meta">
+              <span>In transit to customers</span>
+              <span>Shipping</span>
+            </div>
+            <div class="admin-progress"><span style="width: 61%"></span></div>
+          </div>
+        </div>
+        <div class="col-lg-3">
+          <div class="card dashboard-metric-card">
+            <div class="dashboard-metric-card__top">
+              <div>
+                <h4>Delivered</h4>
+                <div class="value">{{delivered_count}}</div>
+              </div>
+              <span class="icon-wrap"
+                ><i class="ion-android-checkmark-circle"></i
+              ></span>
+            </div>
+            <div class="meta">
+              <span>Completed successfully</span>
+              <span>Closed</span>
+            </div>
+            <div class="admin-progress"><span style="width: 88%"></span></div>
+          </div>
+        </div>
+        <div class="col-lg-3">
+          <div class="card dashboard-metric-card">
+            <div class="dashboard-metric-card__top">
+              <div>
+                <h4>Canceled</h4>
+                <div class="value">{{cancel_count}}</div>
+              </div>
+              <span class="icon-wrap"><i class="ion-android-close"></i></span>
+            </div>
+            <div class="meta">
+              <span>Orders not completed</span>
+              <span>Attention</span>
+            </div>
+            <div class="admin-progress"><span style="width: 28%"></span></div>
           </div>
         </div>
       </div>
-      <hr />
+
       <div class="row">
         <div class="col-lg-3">
-          <div class="card lola-card">
-            <div class="card-body">
-              <h4>
-                No of Category
-                <span class="pull-right"
-                  ><i class="ion-android-list f-s-30 text-danger"></i
-                ></span>
-              </h4>
-              <h6 class="m-t-20 f-s-14">{{categories.count}}</h6>
-              <div class="progress m-t-0 h-7px lola-pro">
-                <div
-                  role="progressbar"
-                  class="progress-bar bg-danger wow animated progress-animated w-65pc h-7px"
-                ></div>
-              </div>
-            </div>
+          <div class="card admin-mini-stat">
+            <strong>{{categories.count}}</strong>
+            <span>Categories</span>
           </div>
         </div>
         <div class="col-lg-3">
-          <div class="card lola-card">
-            <div class="card-body">
-              <h4>
-                No of Sub Category
-                <span class="pull-right"
-                  ><i class="ion-android-list f-s-30 text-danger"></i
-                ></span>
-              </h4>
-              <h6 class="m-t-20 f-s-14">{{sub_category.count}}</h6>
-              <div class="progress m-t-0 h-7px lola-pro">
-                <div
-                  role="progressbar"
-                  class="progress-bar bg-danger wow animated progress-animated w-65pc h-7px"
-                ></div>
-              </div>
-            </div>
+          <div class="card admin-mini-stat">
+            <strong>{{sub_category.count}}</strong>
+            <span>Subcategories</span>
           </div>
         </div>
         <div class="col-lg-3">
-          <div class="card lola-card">
-            <div class="card-body">
-              <h4>
-                No of Brands<span class="pull-right"
-                  ><i class="ion-android-list f-s-30 text-danger"></i
-                ></span>
-              </h4>
-              <h6 class="m-t-20 f-s-14">{{brands.count}}</h6>
-              <div class="progress m-t-0 h-7px lola-pro">
-                <div
-                  role="progressbar"
-                  class="progress-bar bg-danger wow animated progress-animated w-65pc h-7px"
-                ></div>
-              </div>
-            </div>
+          <div class="card admin-mini-stat">
+            <strong>{{brands.count}}</strong>
+            <span>Brands</span>
           </div>
         </div>
         <div class="col-lg-3">
-          <div class="card lola-card">
-            <div class="card-body">
-              <h4>
-                No of Products<span class="pull-right"
-                  ><i class="ion-android-list f-s-30 text-danger"></i
-                ></span>
-              </h4>
-              <h6 class="m-t-20 f-s-14">{{products.count}}</h6>
-              <div class="progress m-t-0 h-7px lola-pro">
-                <div
-                  role="progressbar"
-                  class="progress-bar bg-danger wow animated progress-animated w-65pc h-7px"
-                ></div>
-              </div>
-            </div>
+          <div class="card admin-mini-stat">
+            <strong>{{products.count}}</strong>
+            <span>Products</span>
           </div>
         </div>
       </div>
+
       <div class="row">
         <div class="col-xl-7">
-          <div class="card lola-card">
+          <div class="card section-card">
             <div class="card-body">
-              <h4 class="card-title">Monthly Income</h4>
+              <div class="metric-card__header">
+                <div>
+                  <h3>Monthly Income</h3>
+                  <p>Current sales snapshot for the admin team.</p>
+                </div>
+                <a href="{% url 'allproduct' %}" class="btn admin-btn-secondary--dark"
+                  >Review catalog</a
+                >
+              </div>
               <div class="f-s-30 f-w-300 text-success">
-                {% if monthly_income > 0 %} ₹{{ monthly_income|floatformat:0 }}
+                {% if monthly_income > 0 %} &#8377;{{ monthly_income|floatformat:0 }}
                 <span class="f-s-16 text-uppercase">INR</span>
                 {% else %}
                 <span class="text-muted">No data available</span>
                 {% endif %}
               </div>
-              <a
-                href="#"
-                class="btn btn-outline-dark btn-flat m-t-5 m-b-30 f-s-14"
-                >View Details</a
-              >
+              <div class="m-t-5 m-b-30 f-s-14 admin-form-hint">
+                This keeps the same reporting behavior and chart wiring.
+              </div>
               <canvas id="sales-graph-top"></canvas>
             </div>
           </div>
         </div>
         <div class="col-xl-5">
-          <div class="card lola-card">
+          <div class="card section-card">
             <div class="card-body">
-              <div class="d-flex justify-content-between">
+              <div class="section-card__header">
                 <div>
-                  <h4 class="card-title">Messages</h4>
+                  <h3>Latest Messages</h3>
+                  <p>Most recent contact requests from customers.</p>
                 </div>
-                <div>
-                  <span class="mx-5"><b>{{contact_message.count}}</b></span>
-                </div>
+                <div class="section-note"><b>{{contact_message.count}}</b> total</div>
               </div>
 
-              {% for c in contact_message|slice:":5" %}
-              <div class="media border-bottom-1 p-t-15 p-b-15">
-                <span class="mx-2"
-                  ><h1><b>{{forloop.counter}}</b></h1></span
-                >
-                <div class="media-body">
-                  <h5>{{c.name}}</h5>
-                  <span class="text-muted f-s-6">{{c.created_at}}</span>
-                  <p class="m-b-0">{{c.desc|truncatechars:"85"}}</p>
+              <div class="message-list">
+                {% for c in contact_message|slice:":5" %}
+                <div class="message-item">
+                  <span class="message-item__index">{{forloop.counter}}</span>
+                  <div class="media-body flex-grow-1">
+                    <h5>{{c.name}}</h5>
+                    <span class="text-muted f-s-6">{{c.created_at}}</span>
+                    <p class="m-b-0">{{c.desc|truncatechars:"85"}}</p>
+                  </div>
                 </div>
+                {% endfor %}
               </div>
-              {% endfor %}
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="row">
-        <div class="col-lg-12 col-xl-12">
-          <div class="card lola-card">
-            <div class="card-body">
-              <!-- <div class="active-member">
-                <div class="table-responsive">
-                  <table class="table table-xs">
-                                        <thead>
-                                            <tr>
-                                                <th>Top Active Members</th>
-                                                <th>Views</th>
-                                                <th>Country</th>
-                                                <th>Status</th>
-                                                <th>Comments</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr>
-                                                <td>
-                                                    <img src="/static/assetss/images/avatar/1.jpg"
-                                                        class="w-40px rounded-circle m-r-10" alt="">Arden Karn
-                                                </td>
-                                                <td><span>125</span>
-                                                </td>
-                                                <td>United States</td>
-                                                <td><i class="fa fa-circle-o text-success f-s-12 m-r-10"></i> Active
-                                                </td>
-                                                <td><span>84</span>
-                                                </td>
-                                            </tr>
-                                           
-                                           
-                                        </tbody>
-                                    </table>
-                </div>
-              </div> -->
             </div>
           </div>
         </div>
       </div>
     </div>
-    <!-- #/ container -->
   </div>
-  <!-- #/ content body -->
   {% include 'adminpannel/copywrite.html' %}
 </div>
 {% endblock body %}

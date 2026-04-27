@@ -1,23 +1,32 @@
-{% extends 'adminpannel/base.html' %} {% block body %} {% include
-'adminpannel/loader.html' %}
+{% extends 'adminpannel/base.html' %}
+
+{% block body %}
+{% include 'adminpannel/loader.html' %}
 <div id="main-wrapper">
-  <!-- header -->
   {% include 'adminpannel/header.html' %}
-  <!-- #/ header -->
-  <!-- sidebar -->
   {% include 'adminpannel/sidebar.html' %}
-  <!-- #/ sidebar -->
   <div class="content-body">
-    <div class="container">
+    <div class="container page-shell">
+      <section class="page-hero">
+        <span class="page-hero__eyebrow">Catalog Setup</span>
+        <h2>Build sharper subcategory structure for browsing and merchandising.</h2>
+        <p>
+          Pair each subcategory with its parent category and image in a layout
+          that is easier to scan and maintain.
+        </p>
+      </section>
+
       <div class="row">
-        <div class="col-lg-12 col-xl-12">
-          <div class="card">
+        <div class="col-lg-5 col-xl-4">
+          <div class="card section-card">
             <div class="card-body">
-              <div class="d-flex justify-content-around align-items-center">
-                <div>Add Sub Category</div>
-                <div>Size of Images: 242 x 130</div>
+              <div class="section-card__header">
+                <div>
+                  <h3>Add Subcategory</h3>
+                  <p>Attach a child collection to an existing category.</p>
+                </div>
+                <div class="section-note">Image guide: 242 x 130</div>
               </div>
-              <hr />
               <form
                 action=""
                 method="post"
@@ -25,23 +34,19 @@
                 id="subCategoryForm"
               >
                 {% csrf_token %}
-                <div class="row d-flex align-items-end">
-                  <div class="mx-2">
-                    <label for=""
-                      >Sub Category Title
-                      <span class="text-danger">*</span></label
-                    >
+                <div class="admin-form-grid">
+                  <div class="admin-field admin-field--span-12">
+                    <label for="">Sub Category Title <span class="text-danger">*</span></label>
                     <input
                       type="text"
                       class="form-control"
                       name="title"
+                      placeholder="Example: Wall Art"
                       required
                     />
                   </div>
-                  <div class="mx-2">
-                    <label for=""
-                      >Select Category <span class="text-danger">*</span></label
-                    >
+                  <div class="admin-field admin-field--span-12">
+                    <label for="">Select Category <span class="text-danger">*</span></label>
                     <select
                       name="subcategory"
                       id="categorySelect"
@@ -53,13 +58,9 @@
                       <option value="{{c.uid}}">{{c.category_name}}</option>
                       {% endfor %}
                     </select>
-                    <!-- <input type="text" class="form-control" name="subcategory"> -->
                   </div>
-
-                  <div class="mx-2">
-                    <label for=""
-                      >Image <span class="text-danger">*</span></label
-                    >
+                  <div class="admin-field admin-field--span-12">
+                    <label for="">Image <span class="text-danger">*</span></label>
                     <input
                       type="file"
                       class="form-control"
@@ -67,16 +68,12 @@
                       required
                       accept="image/*"
                     />
+                    <small>Choose the visual used to represent this subcategory.</small>
                   </div>
-                  <div class="d-flex align-items-end mx-2">
-                    <button
-                      style="height: 40px"
-                      type="submit"
-                      class="btn btn-dark"
-                    >
-                      Submit
-                    </button>
-                  </div>
+                </div>
+                <div class="admin-form-actions">
+                  <span class="admin-form-hint">Parent-child catalog relationships stay unchanged.</span>
+                  <button type="submit" class="btn btn-dark">Save Subcategory</button>
                 </div>
               </form>
               <script>
@@ -112,67 +109,67 @@
               </script>
             </div>
           </div>
+        </div>
 
-          <div class="card">
+        <div class="col-lg-7 col-xl-8">
+          <div class="card table-card">
             <div class="card-body">
-              <div class="active-member">
-                <div class="table-responsive">
-                  <table class="table table-xs">
-                    <thead>
-                      <tr>
-                        <th>No</th>
-                        <th>Image</th>
-                        <th>Sub Category Name</th>
-                        <th>Category Name</th>
-                        <th>Status</th>
-                        <th>Action</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {% for sc in sub_category %}
-                      <tr>
-                        <td><span>{{forloop.counter}}</span></td>
-                        <td>
-                          <img
-                            src="{{sc.category_image.url}}"
-                            style="width: 50px"
-                            alt=""
-                          />
-                        </td>
-                        <td>{{sc.category_name}}</td>
-                        <td>{{sc.category.category_name}}</td>
-                        <td>
-                          {% if sc.is_publish %}
-                          <a
-                            href="{% url 'change_status' %}?type=subcategory&uid={{sc.uid}}"
-                            ><i
-                              class="fa fa-circle text-success f-s-12 m-r-10"
-                            ></i>
-                            Publish</a
-                          >
-                          {% else %}
-                          <a
-                            href="{% url 'change_status' %}?type=subcategory&uid={{sc.uid}}"
-                            ><i
-                              class="fa fa-circle-o text-danger f-s-12 m-r-10"
-                            ></i>
-                            Not Publish</a
-                          >
-                          {% endif %}
-                        </td>
-                        <td>
-                          <a
-                            class="btn btn-danger"
-                            href="{% url 'delsubcategory' sc.uid %}"
-                          >
-                            <b>X</b></a
-                          >
-                        </td>
-                      </tr>
-                      {% endfor %}
-                    </tbody>
-                  </table>
+              <div class="table-card__header">
+                <div>
+                  <h3>Existing Subcategories</h3>
+                  <p>Review hierarchy, publish state, and media at a glance.</p>
                 </div>
+                <div class="section-note">{{ sub_category.count }} total</div>
+              </div>
+              <div class="table-responsive">
+                <table class="table table-xs">
+                  <thead>
+                    <tr>
+                      <th>No</th>
+                      <th>Image</th>
+                      <th>Sub Category Name</th>
+                      <th>Category Name</th>
+                      <th>Status</th>
+                      <th>Action</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {% for sc in sub_category %}
+                    <tr>
+                      <td><span>{{forloop.counter}}</span></td>
+                      <td>
+                        <img
+                          src="{{sc.category_image.url}}"
+                          class="table-thumb"
+                          alt=""
+                        />
+                      </td>
+                      <td>{{sc.category_name}}</td>
+                      <td>{{sc.category.category_name}}</td>
+                      <td>
+                        {% if sc.is_publish %}
+                        <a
+                          href="{% url 'change_status' %}?type=subcategory&uid={{sc.uid}}"
+                          class="status-pill status-pill--live"
+                          ><i class="fa fa-circle"></i> Publish</a
+                        >
+                        {% else %}
+                        <a
+                          href="{% url 'change_status' %}?type=subcategory&uid={{sc.uid}}"
+                          class="status-pill status-pill--muted"
+                          ><i class="fa fa-circle-o"></i> Not Publish</a
+                        >
+                        {% endif %}
+                      </td>
+                      <td>
+                        <div class="table-actions">
+                          <a class="btn btn-danger" href="{% url 'delsubcategory' sc.uid %}">Remove</a>
+                        </div>
+                      </td>
+                    </tr>
+                    {% endfor %}
+                  </tbody>
+                </table>
               </div>
             </div>
           </div>

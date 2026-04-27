@@ -19,7 +19,22 @@
   </div>
   <div class="header-content">
     <div class="header-left">
-      <ul></ul>
+      <div class="admin-topbar">
+        <div class="admin-topbar__meta">
+          <small>Printora Admin Workspace</small>
+          <strong>Catalog, orders, and storefront controls in one place</strong>
+        </div>
+        <div class="admin-topbar__actions">
+          <a class="admin-link-chip" href="{% url 'addproduct' %}">
+            <i class="mdi mdi-plus-circle-outline"></i>
+            Add Product
+          </a>
+          <a class="admin-link-chip" href="{% url 'allproduct' %}">
+            <i class="mdi mdi-format-list-bulleted"></i>
+            Product Library
+          </a>
+        </div>
+      </div>
     </div>
     <div class="header-right">
       <ul>
@@ -276,7 +291,7 @@
             <div class="dropdown-content-body">
               <ul>
                 <li>
-                  <a href="{% url 'contactform' %}"
+                  <a href="{% url 'dashboard' %}"
                     ><i class="mdi mdi-user"></i>
                     <span>Welcome {{user.full_name}}</span></a
                   >
